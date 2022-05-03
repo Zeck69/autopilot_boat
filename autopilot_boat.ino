@@ -1,20 +1,16 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define MAX_VAL_DEG_BOAT 150.0 //taille maximale depuis le cone deventement en degrees
-#define MAX_VAL_DEG_SAIL 60.0 // degree span depuis l'horizontale
+#define MAX_VAL_DEG_BOAT 150.0 //maximum span for the sail to move from the winding cone of the boat 
+//TODO TEST if 30° of winding cone is enough
+#define MAX_VAL_DEG_SAIL 60.0 // degree span from l'horizontal line 
+//TODO check this angle with DESIGNTEAM
 #define SPAN 5 //size of span for testing degrees
 
-// return: degree between 0 and 360  => changed to -179 to 180
-double degrees(double value){
-    double res = floor(value);
-    res = (double)((int)value % 360);
-    while(res >360){
-        res -= 360;
-    }
-    while(res<0){
-        res+=360;
-    }
+// return: degree between -179 and 180
+int degrees(int value){
+    int res = value % 360;
+
     if(res<=180){
         return res;
     }else{
@@ -23,13 +19,14 @@ double degrees(double value){
     
 }
 
-// return: angle à rajouter depuis l'horizontale en fonction de l'angle du bateau
-double degree_prediction_before_horizon(double boat_degree){ 
-    return (1/boat_degree)*MAX_VAL_DEG_SAIL/MAX_VAL_DEG_BOAT;
+// return: degree to add from horizontal depending on current angle (horizontal being the degree 0 for the sail on right side, and 180 on the left side)
+int degree_prediction_before_horizon(int boat_degree){ 
+    return (int)(1.0/(double)boat_degree)*(MAX_VAL_DEG_SAIL/MAX_VAL_DEG_BOAT);
 }
 
-//puts the sail on different positions to find the best speed and sets the optimal position
-void degree_sampling(double start_degree){
+//input: start_degree = initial guess optimal position returned by degre_prediction
+//puts the sail on different positions to find the best speed and sets the optimal position;
+void degree_sampling(int start_degree){
     double speeds[2*SPAN];
     for (size_t i = -SPAN; i < SPAN; i++)
     {
@@ -62,35 +59,88 @@ int best_position(double speeds[]){
 
 /*
 starting_angle: current direction of boat with respect to wind direction
-return: position
+desired_position: degree of the final position with respect to the wind
+return: makes the boat turn to the given direction with a correct change for the sail and rudder
 */
-double turning_rudder(double starting_angle, double desired_position){
-    if(degrees(starting_angle) >= 0 && degrees(desired_position >= 0)){
-        //turning in the right side of the wind
-        return desired_position*0.5*test_speed();
-
-    }else if(degrees(starting_angle) <= 0 && degrees(desired_position <= 0)){
+void turning(int starting_angle, int desired_position){
+    if(degrees(starting_angle) >= 0 && degrees(desired_position) >= 180 - MAX_VAL_DEG_BOAT){
+        //turning in the right side of the wind, without changing sides
+        if(degrees(desired_position)- degrees(starting_angle) > 0){
+            // we have to go further appart from the wind
+            while(degree_boat() < degrees(desired_position)){
+            /*TODO servos
+            rudder = 90-(degrees(desired_position)-degrees(starting_angle));
+            sail = degree_prediction_before_horizon(degree_boat());
+            */ 
+            }
+            //turn finished at this point
+            /*TODO servos
+            rudder = 90;
+            degree_sampling(degree_boat());
+            */
+        }else if(degrees(desired_position)- degrees(starting_angle) < 0){
+            //we have to get closer to the wind
+            while(degree_boat() > degrees(desired_position)){
+            /*TODO servos
+            rudder = 90-(degrees(desired_position)-degrees(starting_angle));
+            sail = degree_prediction_before_horizon(degree_boat());
+            */ 
+            }
+            //turn finished at this point
+            /*TODO servos
+            rudder = 90;
+            degree_sampling(degree_boat());
+            */
+        }
+    }else if(degrees(starting_angle) <= 0 && degrees(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
         //turning in the left side of the wind
-        return desired_position*90/test_speed();
+        if(degrees(desired_position)- degrees(starting_angle) > 0){
+            // we have to get closer to the wind
+            while(degree_boat() < degrees(desired_position)){
+            /*TODO servos
+            rudder = 90-(degrees(desired_position)-degrees(starting_angle));
+            sail = degree_prediction_before_horizon(degree_boat());
+            */ 
+            }
+            //turn finished at this point
+            /*TODO servos
+            rudder = 90;
+            degree_sampling(degree_boat());
+            */
+        }else if(degrees(desired_position)- degrees(starting_angle) < 0){
+            //we have to get further appart from the wind
+            while(degree_boat() > degrees(desired_position)){
+            /*TODO servos
+            rudder = 90-(degrees(desired_position)-degrees(starting_angle));
+            sail = degree_prediction_before_horizon(degree_boat());
+            */ 
+            }
+            //turn finished at this point
+            /*TODO servos
+            rudder = 90;
+            degree_sampling(degree_boat());
+            */
+        }
+        
     }else{
         jabing_tacking(starting_angle,desired_position);
     }
 }
 
 //TODO: turning mechanism for jabing or tacking
-void jabing_tacking(double starting_angle, double desired_position){
+void jabing_tacking(int starting_angle, int desired_position){
 
-}
-
-//TODO: return direction of the boat with respect to the wind
-double direction(){
-
-    //this should get the direction of the wind, the wind will be consired to be at 0° always
-    return 0.0;
 }
 
 //TODO return: linear speed of the boat
 double test_speed(){ 
 
 };
+
+//TODO return: degree of the boat with respect to the wind in real time thanks to the windvane
+int degree_boat(){
+
+}
+
+
 //end of the code
