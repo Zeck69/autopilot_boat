@@ -7,6 +7,8 @@
 //TODO check this angle with DESIGNTEAM
 #define SPAN 5 //size of span for testing degrees
 
+//comments
+
 // return: degree between -179 and 180
 int degrees(int value){
     int res = value % 360;
