@@ -60,7 +60,7 @@ int best_position(double speeds[]){
 /*
 starting_angle: current direction of boat with respect to wind direction
 desired_position: degree of the final position with respect to the wind
-return: makes the boat turn to the given direction with a correct change for the sail and rudder
+return: makes the boat turn to the given direction with a correct change for the sail and rudder, if possible (not in the wind cone)
 */
 void turning(int starting_angle, int desired_position){
     if(degrees(starting_angle) >= 0 && degrees(desired_position) >= 180 - MAX_VAL_DEG_BOAT){
@@ -123,14 +123,40 @@ void turning(int starting_angle, int desired_position){
         }
         
     }else{
-        jabing_tacking(starting_angle,desired_position);
+        if(degrees(starting_angle) <= 0 && degrees(desired_position) >= (180 - MAX_VAL_DEG_BOAT)){
+            if(degrees(desired_position)<= 180+degrees(starting_angle)){
+                tacking(starting_angle,desired_position);
+            }else{
+                jibing(starting_angle,desired_position);
+            }
+
+        }else if(degrees(starting_angle) >= 0 && degrees(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+            if(degrees(desired_position) >= -(180-degrees(starting_angle))){
+                tacking(starting_angle,desired_position);
+            }else{
+                jibing(starting_angle,desired_position);
+            }
+        }
     }
 }
 
-//TODO: turning mechanism for jabing or tacking
-void jabing_tacking(int starting_angle, int desired_position){
+//TODO: more compact way of handle turning since alwayss the same computation
+//TODO handle when diff is more than 90° => if(diff>87){ diff = 87}
+//TODO handle gentle transitions of degrees instead of crazy ass bitch changes for rudder
+void turning_settings(int diff){
 
 }
+
+//TODO: turning mechanism for tacking
+void tacking(int starting_angle, int desired_position){
+
+}
+
+//TODO: turning mechanism for jibing
+void jibing(int starting_angle, int desired_position){
+
+}
+
 
 //TODO return: linear speed of the boat
 double test_speed(){ 
