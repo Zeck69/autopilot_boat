@@ -30,7 +30,7 @@ int linear_speed()
 
 int get_time() {
   previous = present;
-  present = millis()
+  present = millis();
   return (present-previous);
 }
 
