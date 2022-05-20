@@ -21,7 +21,7 @@ unsigned long present;
 //TODO TEST if 30° of winding cone is enough, not enought => 45°
 #define MAX_VAL_DEG_SAIL 77.0 // degree span from l'horizontal line 
 //TODO check this angle with DESIGNTEAM
-#define SPAN 5 //size of span for testing degres_limit
+#define SPAN 5 //size of span for testing degrees_limit
 
 Servo sail;
 Servo tiller;
@@ -44,7 +44,7 @@ void setup(){
 
 
 // return: degree between -179 and 180
-int degres_limit(int value){
+int degrees_limit(int value){
     int res = value % 360;
 
     if(res<=180){
@@ -75,9 +75,10 @@ void degree_sampling(int start_degree){
         sail.write(start_degree+i);
         delay(1000);
         speeds[i+SPAN] = test_speed();
-        delay(1000);
+        delay(500);
     }
     sail.write(start_degree + best_position(speeds));
+    speed = 0;
     
 }
 
@@ -102,57 +103,59 @@ desired_position: degree of the final position with respect to the wind
 return: makes the boat turn to the given direction with a correct change for the sail and rudder, if possible (not in the wind cone)
 */
 void turning(int starting_angle, int desired_position){
-    if(degres_limit(starting_angle) >= 0 && degres_limit(desired_position) >= 180 - MAX_VAL_DEG_BOAT){
+    if(degrees_limit(starting_angle) >= 0 && degrees_limit(desired_position) >= 180 - MAX_VAL_DEG_BOAT){
         //turning in the right side of the wind, without changing sides
-        if(degres_limit(desired_position)- degres_limit(starting_angle) > 0){
+        if(degrees_limit(desired_position)- degrees_limit(starting_angle) > 0){
             // we have to go further appart from the wind
-            while(degree_boat() < degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
+            while(degree_boat() < degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
            end_turn();
 
-        }else if(degres_limit(desired_position)- degres_limit(starting_angle) < 0){
+        }else if(degrees_limit(desired_position)- degrees_limit(starting_angle) < 0){
             //we have to get closer to the wind
-            while(degree_boat() > degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
+            while(degree_boat() > degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
             end_turn();
         }
-    }else if(degres_limit(starting_angle) <= 0 && degres_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+    }else if(degrees_limit(starting_angle) <= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
         //turning in the left side of the wind
-        if(degres_limit(desired_position)- degres_limit(starting_angle) > 0){
+        if(degrees_limit(desired_position)- degrees_limit(starting_angle) > 0){
             // we have to get closer to the wind
-            while(degree_boat() < degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
+            while(degree_boat() < degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
             end_turn();
 
-        }else if(degres_limit(desired_position)- degres_limit(starting_angle) < 0){
+        }else if(degrees_limit(desired_position)- degrees_limit(starting_angle) < 0){
             //we have to get further appart from the wind
-            while(degree_boat() > degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
+            while(degree_boat() > degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
             end_turn();
         }
         
     }else{
-        if(degres_limit(starting_angle) <= 0 && degres_limit(desired_position) >= (180 - MAX_VAL_DEG_BOAT)){
-            if(degres_limit(desired_position)<= 180+degres_limit(starting_angle)){
+        if(degrees_limit(starting_angle) <= 0 && degrees_limit(desired_position) >= (180 - MAX_VAL_DEG_BOAT)){
+            if(degrees_limit(desired_position)<= 180+degrees_limit(starting_angle)){
                 tacking(starting_angle,desired_position);
             }else{
                 jibing(starting_angle,desired_position);
             }
 
-        }else if(degres_limit(starting_angle) >= 0 && degres_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
-            if(degres_limit(desired_position) >= -(180-degres_limit(starting_angle))){
+        }else if(degrees_limit(starting_angle) >= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+            if(degrees_limit(desired_position) >= -(180-degrees_limit(starting_angle))){
                 tacking(starting_angle,desired_position);
             }else{
                 jibing(starting_angle,desired_position);
             }
+        }else{
+            beating(starting_angle,desired_position);
         }
     }
 }
@@ -188,14 +191,14 @@ void end_turn(){
 //usual turn until wind cone then force turning until outside the cone via simulating the movement of the sail and usual turning until end
 void tacking(int starting_angle, int desired_position){
     if(desired_position > 0){
-        turning(starting_angle,-45);
-        while(degree_boat() < 45){
+        turning(starting_angle,-(180-MAX_VAL_DEG_BOAT));
+        while(degree_boat() < 180-MAX_VAL_DEG_BOAT){
             turning_settings(20,10);
         }
         turning(degree_boat(),desired_position);
     }else{
-        turning(starting_angle,45);
-        while(degree_boat() > -45){
+        turning(starting_angle,180-MAX_VAL_DEG_BOAT);
+        while(degree_boat() > -(180-MAX_VAL_DEG_BOAT)){
             turning_settings(-20,10);
         }
         turning(degree_boat(),desired_position);
@@ -222,22 +225,42 @@ void jibing(int starting_angle, int desired_position){
 
 }
 
-
-//TODO return: linear speed of the boat
-double test_speed(){ 
-    Vector accel = mpu.readNormalizeAccel();
-    return accel.XAxis * get_time()  + speed;
-};
-
-//return: time
-unsigned long get_time() {
-  previous = present;
-  present = millis();
-  return (present-previous);
+void beating(int starting_angle, int desired_position){
+    if(starting_angle >= 180-MAX_VAL_DEG_BOAT){
+        turning(starting_angle,180-MAX_VAL_DEG_BOAT);
+    }else if(starting_angle <=-(180-MAX_VAL_DEG_BOAT)){
+        turning(starting_angle, -(180-MAX_VAL_DEG_BOAT));
+    }else if(starting_angle >= 0){
+        while(degree_boat() < 180-MAX_VAL_DEG_BOAT){
+            turning_settings(20,10);
+        }
+    }else if(starting_angle <= 0){
+        while(degree_boat() > -(180-MAX_VAL_DEG_BOAT)){
+            turning_settings(-20,10);
+        }
+    }
+    //need 2 values saved for delays => right and left
 }
 
-//TODO return: degree of the boat with respect to the wind in real time thanks to the windvane
-//TODO add values how hand wind vane gives info
+// return: linear speed of the boat
+double test_speed(){ 
+    float acceleration = mpu.readNormalizeAccel().XAxis;
+    delay(250);
+    acceleration += mpu.readNormalizeAccel().XAxis;
+    delay(250);
+    acceleration += mpu.readNormalizeAccel().XAxis;
+    return (double)((acceleration/3.0) * get_time()  + speed);
+};
+
+//return: time from last mesure
+double get_time() {
+  previous = present;
+  present = millis();
+  return (double)(present-previous) * 10^(-3);
+}
+
+//return: degree of the boat with respect to the wind in real time thanks to the windvane
+//TODO add values how hand wind vane gives info => see method with interrupt for good rotary encoder 
 int degree_boat(){
     return (int) ((double)analogRead(A0)/1023*180);
 }
@@ -248,7 +271,10 @@ double angular_speed()
   Vector gyro = mpu.readNormalizeGyro();
   return gyro.ZAxis;
 }
-//end of the code
+
+
+
+//----------- end of the code -----------//
 
 void loop(){
   Serial.println("---BEGIN---");
