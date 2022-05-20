@@ -17,6 +17,8 @@ int actual_pos=0;
 int desired_pos=0;
 
 void setup(){ 
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
   
     sail.attach(9);
     tiller.attach(10);
@@ -54,9 +56,9 @@ void degree_sampling(int start_degree){
     for (size_t i = -SPAN; i < SPAN; i++)
     {
         sail.write(start_degree+i);
-        delay(500);
+        delay(1000);
         speeds[i+SPAN] = test_speed();
-        delay(500);
+        delay(1000);
     }
     sail.write(start_degree + best_position(speeds));
     
@@ -88,7 +90,7 @@ void turning(int starting_angle, int desired_position){
         if(degres_limit(desired_position)- degres_limit(starting_angle) > 0){
             // we have to go further appart from the wind
             while(degree_boat() < degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle));
+                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
             }
             //turn finished at this point
            end_turn();
@@ -96,7 +98,7 @@ void turning(int starting_angle, int desired_position){
         }else if(degres_limit(desired_position)- degres_limit(starting_angle) < 0){
             //we have to get closer to the wind
             while(degree_boat() > degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle));
+                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
             }
             //turn finished at this point
             end_turn();
@@ -106,7 +108,7 @@ void turning(int starting_angle, int desired_position){
         if(degres_limit(desired_position)- degres_limit(starting_angle) > 0){
             // we have to get closer to the wind
             while(degree_boat() < degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle));
+                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
             }
             //turn finished at this point
             end_turn();
@@ -114,7 +116,7 @@ void turning(int starting_angle, int desired_position){
         }else if(degres_limit(desired_position)- degres_limit(starting_angle) < 0){
             //we have to get further appart from the wind
             while(degree_boat() > degres_limit(desired_position)){
-                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle));
+                turning_settings(degres_limit(desired_position)-degres_limit(starting_angle),15);
             }
             //turn finished at this point
             end_turn();
@@ -141,19 +143,22 @@ void turning(int starting_angle, int desired_position){
 //more compact way of handle turning since alwayss the same computation
 //TODO add transition 
 //handle when diff is more than 20° => if(diff>20){diff = 20}
-void turning_settings(int diff){
+void turning_settings(int diff,int time){
     if(diff > 20){
-        tiller.write(90-(20));
-        delay(15);
+        tiller.write(90-(19));
+        delay(time);
         sail.write(degree_prediction_before_horizon(degree_boat())); 
+        delay(time);
     }else if(diff<-20){
-        tiller.write(90-(-20));
-        delay(15);
+        tiller.write(90-(-19));
+        delay(time);
         sail.write(degree_prediction_before_horizon(degree_boat())); 
+        delay(time);
     }else{
         tiller.write(90-(diff));
-        delay(15);
+        delay(time);
         sail.write(degree_prediction_before_horizon(degree_boat())); 
+        delay(time);
     }
 }
 
@@ -166,37 +171,38 @@ void end_turn(){
 //usual turn until wind cone then force turning until outside the cone via simulating the movement of the sail and usual turning until end
 void tacking(int starting_angle, int desired_position){
     if(desired_position > 0){
-        turning(starting_angle,45);
-        while(degree_boat() < 45){
-            turning_settings(20);
-        }
-        while (degree_boat()< desired_position)
-        {
-            turning(degree_boat(),desired_position);
-        }
-        end_turn();
-        
-
-    }else{
         turning(starting_angle,-45);
-        while(degree_boat()>-45){
-            turning_settings(-20);
+        while(degree_boat() < 45){
+            turning_settings(20,10);
         }
-        while (degree_boat() > desired_position)
-        {
-            turning(degree_boat(),desired_position);
+        turning(degree_boat(),desired_position);
+    }else{
+        turning(starting_angle,45);
+        while(degree_boat() > -45){
+            turning_settings(-20,10);
         }
-        end_turn();
+        turning(degree_boat(),desired_position);
     }
-
-    
-    
 
 }
 
-//TODO: turning mechanism for jibing
+//turning mechanism for jibing
 void jibing(int starting_angle, int desired_position){
-    
+    if(desired_position>0){
+        turning(starting_angle, -150);
+        while(degree_boat() > -179){
+            turning_settings(-20,5);
+        }
+        turning(degree_boat(),desired_position);
+
+    }else{
+        turning(starting_angle, 150);
+        while(degree_boat() < 180){
+            turning_settings(20,5);
+        }
+        turning(degree_boat(),desired_position);
+    }
+
 }
 
 
@@ -207,17 +213,25 @@ double test_speed(){
 
 //TODO return: degree of the boat with respect to the wind in real time thanks to the windvane
 int degree_boat(){
-    return fct_IMU();
-
+    return (int) ((double)analogRead(A0)/1023*180);
 }
 //end of the code
 
 void loop(){
-  Serial.println(degree_prediction_before_horizon(60));
-  sail.write(degree_prediction_before_horizon(60));
-  delay(10);
-  Serial.println(degree_prediction_before_horizon(180));
-  sail.write(degree_prediction_before_horizon(180));
+  Serial.println("---BEGIN---");
+  tiller.write(90);
   delay(1000);
-  exit;
+  
+  /*Serial.println("---degree boat---");
+  Serial.println(degree_boat());
+  Serial.println("---degree predicted for sail---");
+  Serial.println(degree_prediction_before_horizon(degree_boat()));
+  sail.write(degree_prediction_before_horizon(degree_boat()));*/
+  
+  /*tiller.write(72);
+  delay(1000);
+  tiller.write(90);
+  delay(1000);
+  tiller.write(108);
+  delay(3000);*/
 }
