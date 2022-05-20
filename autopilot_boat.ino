@@ -1,3 +1,16 @@
+#include <Wire.h>
+#include <MPU6050.h>
+
+
+MPU6050 mpu;
+
+double speed;
+unsigned long previous;
+unsigned long present; 
+
+//--- Code IMU -----
+
+
 #include <stdlib.h>
 #include <math.h>
 
@@ -13,16 +26,20 @@
 Servo sail;
 Servo tiller;
 
-int actual_pos=0;
-int desired_pos=0;
-
 void setup(){ 
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
+  sail.attach(9);
+  tiller.attach(10);
+
+  //IMU setup
+
+  mpu.calibrateGyro();
+  mpu.setThreshold(3);
   
-    sail.attach(9);
-    tiller.attach(10);
-    Serial.begin(9600);
+  speed = 0.0;
+
+
 }
 
 
@@ -208,12 +225,28 @@ void jibing(int starting_angle, int desired_position){
 
 //TODO return: linear speed of the boat
 double test_speed(){ 
-
+    Vector accel = mpu.readNormalizeAccel();
+    return accel.XAxis * get_time()  + speed;
 };
 
+//return: time
+unsigned long get_time() {
+  previous = present;
+  present = millis();
+  return (present-previous);
+}
+
 //TODO return: degree of the boat with respect to the wind in real time thanks to the windvane
+//TODO add values how hand wind vane gives info
 int degree_boat(){
     return (int) ((double)analogRead(A0)/1023*180);
+}
+
+
+double angular_speed()
+{
+  Vector gyro = mpu.readNormalizeGyro();
+  return gyro.ZAxis;
 }
 //end of the code
 
