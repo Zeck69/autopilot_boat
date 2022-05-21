@@ -294,7 +294,7 @@ void direction_update()
 double get_time() {
   previous = present;
   present = millis();
-  return (double)(present-previous) * 10^(-3);
+  return (double)((present-previous) * 10^(-3));
 }
 
 //return: degree of the boat with respect to the wind in real time thanks to the windvane
