@@ -34,9 +34,9 @@ void setup(){
 
   //IMU setup
 
+  mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);
   mpu.calibrateGyro();
   mpu.setThreshold(3);
-  mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);
   
   speed = 0.0;
 
