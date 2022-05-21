@@ -240,6 +240,8 @@ void beating(int starting_angle, int desired_position){
         }
     }
     //need 2 values saved for delays => right and left
+    // fct = 1/2 + (1/90)*x pour répartir un temps lamdba
+    //idéal: arriver jusqu'au pt ou t'es à 90° de ton objectif => no possible way
 }
 
 // return: linear speed of the boat
