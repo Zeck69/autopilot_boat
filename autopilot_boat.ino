@@ -244,6 +244,7 @@ void beating(int starting_angle, int desired_position){
     //idéal: arriver jusqu'au pt ou t'es à 90° de ton objectif => no possible way
 }
 
+
 // return: linear speed of the boat
 double test_speed(){ 
     float acceleration = mpu.readNormalizeAccel().XAxis;
@@ -251,8 +252,43 @@ double test_speed(){
     acceleration += mpu.readNormalizeAccel().XAxis;
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
-    return (double)((acceleration/3.0) * get_time()  + speed);
-};
+    speed = (double)((acceleration/3.0) * get_time()  + speed);
+    return speed;
+}
+
+typedef struct {
+  double r = 0;
+  double angle = 0;
+  double x = 0;
+  double y = 0;
+} Direction;
+
+Direction dir;
+
+void direction_update() 
+{
+   float acceleration = mpu.readNormalizeAccel().XAxis;
+   float gyroscope = mpu.readNormalizeGyro().ZAxis;
+   delay(250);
+   acceleration += mpu.readNormalizeAccel().XAxis;
+   gyroscope += mpu.readNormalizeGyro().ZAxis;
+   delay(250);
+   acceleration += mpu.readNormalizeAccel().XAxis;
+   gyroscope += mpu.readNormalizeGyro().ZAxis;
+   
+   acceleration = acceleration/3.0;
+   gyroscope = gyroscope/3.0;
+   
+   double time = get_time();
+   
+   dir.r = (double) (acceleration * time * time  + speed * time + dir.r);
+   dir.angle = (double) (gyroscope * time + dir.angle) ; 
+   dir.x = dir.r*cos(dir.angle);
+   dir.y = dir.r*sin(dir.angle);
+   speed = (double)((acceleration/3.0) * time  + speed);
+   
+   return;
+}
 
 //return: time from last mesure
 double get_time() {
@@ -266,14 +302,6 @@ double get_time() {
 int degree_boat(){
     return (int) ((double)analogRead(A0)/1023*180);
 }
-
-
-double angular_speed()
-{
-  Vector gyro = mpu.readNormalizeGyro();
-  return gyro.ZAxis;
-}
-
 
 
 //----------- end of the code -----------//
