@@ -72,7 +72,7 @@ int degree_prediction_before_horizon(int boat_degree){
 //puts the sail on different positions to find the best speed and sets the optimal position;
 void degree_sampling(int start_degree){
     double speeds[2*SPAN];
-    for (size_t i = -SPAN; i < SPAN; i++)
+    for (int i = -SPAN; i < SPAN; i++)
     {
         sail.write(start_degree+i);
         delay(1000);
@@ -89,7 +89,7 @@ void degree_sampling(int start_degree){
 int best_position(double speeds[]){
     double max_speed = 0.0;
     int max = 0;
-    for (size_t i =  -SPAN; i < SPAN; i++)
+    for (int i =  -SPAN; i < SPAN; i++)
     {
         if(speeds[i+SPAN]>= max_speed){
             max_speed = speeds[i+SPAN];
@@ -248,7 +248,7 @@ void beating(int starting_angle, int desired_position){
     }
 
     if(neg){
-        for (size_t i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             delay((int)(DELAY*fct_time(desired_position)));
             turning(degree_boat(),180-MAX_VAL_DEG_BOAT);
@@ -257,11 +257,11 @@ void beating(int starting_angle, int desired_position){
         }
         
     }else{
-        for (size_t i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
-            delay((int)(delayed*fct_time(desired_position)));
+            delay((int)(DELAY*fct_time(desired_position)));
             turning(degree_boat(), -(180-MAX_VAL_DEG_BOAT));
-            delay(delayed - (int)(delayed*fct_time(desired_position)));
+            delay(DELAY - (int)(DELAY*fct_time(desired_position)));
             turning(degree_boat(),180-MAX_VAL_DEG_BOAT);
         }
     }
