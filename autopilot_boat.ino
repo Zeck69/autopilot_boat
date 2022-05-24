@@ -35,6 +35,7 @@ void setup(){
 
   //IMU setup
 
+  mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);
   mpu.calibrateGyro();
   mpu.setThreshold(3);
   
@@ -272,22 +273,25 @@ double fct_time(int x){
     return 1/2 + (1/90)*(double)(abs(x));
 }
 
+//return: time from last mesure
+double get_time() {
+  previous = present;
+  present = millis();
+  return (double) ((present - previous) * pow(10, -3));
+}
+
+
 // return: linear speed of the boat
-double test_speed(){ 
+double test_speed(){                 
     float acceleration = mpu.readNormalizeAccel().XAxis;
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
-    return (double)((acceleration/3.0) * get_time()  + speed);
-};
-
-//return: time from last mesure
-double get_time() {
-  previous = present;
-  present = millis();
-  //return (double)(present-previous) * 10^(-3);
-  return 0.0;
+    acceleration = (acceleration / 3.0) - 1.33;
+    
+    speed = (double)(acceleration * get_time()  + speed);
+    return speed;
 }
 
 //return: degree of the boat with respect to the wind in real time thanks to the windvane
