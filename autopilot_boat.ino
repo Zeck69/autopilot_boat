@@ -357,7 +357,7 @@ boolean arrival(){
 void update_arrival() {
   if (arrival() && dest_index < (dest_total - 1)) {
     dest = dests[ ++dest_index ];
-  } else if ( dest_index == (dest_total - 1 )) {
+  } else if (arrival() && dest_index == (dest_total - 1 )) {
     exit(0);
   }
 }
