@@ -2,11 +2,28 @@
 #include <MPU6050.h>
 
 
+#define MAX_STOPS 25
+
 MPU6050 mpu;
 
-double speed;
+typedef struct {   // initialized at 0
+  double r = 0.0;
+  double angle = 0.0;
+  double x = 0.0;
+  double y = 0.0;
+}Location ;
+
+double acc_drift = 0.0;
+double speed = 0.0;
+
 unsigned long previous;
-unsigned long present; 
+unsigned long present;
+
+Location loc;  
+Location dest;
+Location dests[MAX_STOPS];
+int dest_index = 0; 
+int dest_total; 
 
 //--- Code IMU -----
 
@@ -39,7 +56,17 @@ void setup(){
   mpu.calibrateGyro();
   mpu.setThreshold(3);
   
-  speed = 0.0;
+   // compensating for drift
+  acc_drift = mpu.readNormalizeAccel().XAxis;
+  delay(200); 
+  acc_drift += mpu.readNormalizeAccel().XAxis;
+  delay(200); 
+  acc_drift += mpu.readNormalizeAccel().XAxis;
+  acc_drift = acc_drift / 3.0;
+
+  // choosing our desired destinations
+  dest_total = 1;
+  dests[0] = create_target(3.0, 5.0);
 
 
 }
@@ -288,23 +315,67 @@ double test_speed(){
     acceleration += mpu.readNormalizeAccel().XAxis;
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
-    acceleration = (acceleration / 3.0) - 1.33;
+    acceleration = (acceleration / 3.0) - acc_drift;
     
     speed = (double)(acceleration * get_time()  + speed);
     return speed;
 }
 
+//updates location of boat
+Location location_update() {
+   float acceleration = mpu.readNormalizeAccel().XAxis;
+   float gyroscope = mpu.readNormalizeGyro().ZAxis;
+   delay(250);
+   acceleration += mpu.readNormalizeAccel().XAxis;
+   gyroscope += mpu.readNormalizeGyro().ZAxis;
+   delay(250);
+   acceleration += mpu.readNormalizeAccel().XAxis;
+   gyroscope += mpu.readNormalizeGyro().ZAxis;
+   
+   acceleration = (acceleration / 3.0) - acc_drift;
+   gyroscope = gyroscope / 3.0;
+   
+   double time = get_time();
+   
+   loc.r = (double) (acceleration * time * time  + speed * time + loc.r);
+   loc.angle = (double) (gyroscope * time + loc.angle) ; 
+   loc.x = loc.r * cos(loc.angle * DEG_TO_RAD);
+   loc.y = loc.r * sin(loc.angle * DEG_TO_RAD);
+   speed = (double) (acceleration * time  + speed);
+   
+   return loc;
+}
+
+boolean arrival(){
+  location_update();
+  if (abs(loc.r - dest.r) <= 5 && abs(loc.angle - dest.angle) <= 5) {
+    return true;
+    }
+  return false;
+}
+
+void update_arrival() {
+  if (arrival() && dest_index < (dest_total - 1)) {
+    dest = dests[ ++dest_index ];
+  } else if ( dest_index == (dest_total - 1 )) {
+    exit(0);
+  }
+}
+
+Location create_target(double x, double y) {
+  Location l; 
+  l.x = x;
+  l.y = y;
+  l.r = sqrt(x*x + y*y) ;
+  l.angle = atan2(y , x) * RAD_TO_DEG;  
+  return l;
+}
+
+
 //return: degree of the boat with respect to the wind in real time thanks to the windvane
 //TODO add values how hand wind vane gives info => see method with interrupt for good rotary encoder 
 int degree_boat(){
     return (int) ((double)analogRead(A0)/1023*180);
-}
-
-
-double angular_speed()
-{
-  Vector gyro = mpu.readNormalizeGyro();
-  return gyro.ZAxis;
 }
 
 
@@ -330,4 +401,21 @@ void loop(){
   delay(1000);
   tiller.write(108);
   delay(3000);*/
+  
+  /* Serial.println("---BEGIN---");
+  Serial.println("time: ");
+  Serial.println(get_time());
+  Serial.println("acceleration :");
+  Serial.println(mpu.readNormalizeAccel().XAxis);
+  Serial.println("linear speed :");
+  Serial.println(test_speed());
+  Serial.println(" angular accel :");
+  Serial.println(mpu.readNormalizeGyro().ZAxis);
+  Serial.println("direction : ");
+  location_update();
+  Serial.println(loc.r);
+  Serial.println(loc.angle);
+  Serial.println(loc.x);
+  Serial.println(loc.y); 
+  delay(2000); */
 }
