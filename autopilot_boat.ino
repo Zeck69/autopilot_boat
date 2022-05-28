@@ -2,11 +2,28 @@
 #include <MPU6050.h>
 
 
+#define MAX_STOPS 25
+
 MPU6050 mpu;
 
-double speed;
+typedef struct {   // initialized at 0
+  double r = 0.0;
+  double angle = 0.0;
+  double x = 0.0;
+  double y = 0.0;
+}Location ;
+
+double acc_drift = 0.0;
+double speed = 0.0;
+
 unsigned long previous;
-unsigned long present; 
+unsigned long present;
+
+Location loc;  
+Location dest;
+Location dests[MAX_STOPS];
+int dest_index = 0; 
+int dest_total; 
 
 //--- Code IMU -----
 
@@ -22,6 +39,7 @@ unsigned long present;
 #define MAX_VAL_DEG_SAIL 77.0 // degree span from l'horizontal line 
 //TODO check this angle with DESIGNTEAM
 #define SPAN 5 //size of span for testing degrees_limit
+#define DELAY 10000 //delay for beating square
 
 Servo sail;
 Servo tiller;
@@ -38,7 +56,17 @@ void setup(){
   mpu.calibrateGyro();
   mpu.setThreshold(3);
   
-  speed = 0.0;
+   // compensating for drift
+  acc_drift = mpu.readNormalizeAccel().XAxis;
+  delay(200); 
+  acc_drift += mpu.readNormalizeAccel().XAxis;
+  delay(200); 
+  acc_drift += mpu.readNormalizeAccel().XAxis;
+  acc_drift = acc_drift / 3.0;
+
+  // choosing our desired destinations
+  dest_total = 1;
+  dests[0] = create_target(3.0, 5.0);
 
 
 }
@@ -58,6 +86,7 @@ int degrees_limit(int value){
 
 // return: degree to add from horizontal depending on current angle (horizontal being the degree 0 for the sail on right side, and 180 on the left side)
 // function obtained via regression of theoritical values (TODO improve)
+//new prediction model (-0,496*boat_degree+90) => loss reduced from 4,312%
 int degree_prediction_before_horizon(int boat_degree){ 
     if(boat_degree < 0){
         return 180-(int)(-0.5162*(-(double)(boat_degree))+94.3846);
@@ -71,7 +100,7 @@ int degree_prediction_before_horizon(int boat_degree){
 //puts the sail on different positions to find the best speed and sets the optimal position;
 void degree_sampling(int start_degree){
     double speeds[2*SPAN];
-    for (size_t i = -SPAN; i < SPAN; i++)
+    for (int i = -SPAN; i < SPAN; i++)
     {
         sail.write(start_degree+i);
         delay(1000);
@@ -88,7 +117,7 @@ void degree_sampling(int start_degree){
 int best_position(double speeds[]){
     double max_speed = 0.0;
     int max = 0;
-    for (size_t i =  -SPAN; i < SPAN; i++)
+    for (int i =  -SPAN; i < SPAN; i++)
     {
         if(speeds[i+SPAN]>= max_speed){
             max_speed = speeds[i+SPAN];
@@ -227,47 +256,73 @@ void jibing(int starting_angle, int desired_position){
 }
 
 void beating(int starting_angle, int desired_position){
+    bool neg = false;
     if(starting_angle >= 180-MAX_VAL_DEG_BOAT){
         turning(starting_angle,180-MAX_VAL_DEG_BOAT);
     }else if(starting_angle <=-(180-MAX_VAL_DEG_BOAT)){
         turning(starting_angle, -(180-MAX_VAL_DEG_BOAT));
+        neg = true;
     }else if(starting_angle >= 0){
         while(degree_boat() < 180-MAX_VAL_DEG_BOAT){
             turning_settings(20,10);
         }
+        end_turn();
     }else if(starting_angle <= 0){
         while(degree_boat() > -(180-MAX_VAL_DEG_BOAT)){
             turning_settings(-20,10);
         }
+        end_turn();
+        neg = true;
     }
-    //need 2 values saved for delays => right and left
-    // fct = 1/2 + (1/90)*x pour répartir un temps lamdba
+
+    if(neg){
+        for (int i = 0; i < 5; i++)
+        {
+            delay((int)(DELAY*fct_time(desired_position)));
+            turning(degree_boat(),180-MAX_VAL_DEG_BOAT);
+            delay(DELAY - (int)(DELAY*fct_time(desired_position)));
+            turning(degree_boat(), -(180-MAX_VAL_DEG_BOAT));
+        }
+        
+    }else{
+        for (int i = 0; i < 5; i++)
+        {
+            delay((int)(DELAY*fct_time(desired_position)));
+            turning(degree_boat(), -(180-MAX_VAL_DEG_BOAT));
+            delay(DELAY - (int)(DELAY*fct_time(desired_position)));
+            turning(degree_boat(),180-MAX_VAL_DEG_BOAT);
+        }
+    }
     //idéal: arriver jusqu'au pt ou t'es à 90° de ton objectif => no possible way
+}
+
+double fct_time(int x){
+    return 1/2 + (1/90)*(double)(abs(x));
+}
+
+//return: time from last mesure
+double get_time() {
+  previous = present;
+  present = millis();
+  return (double) ((present - previous) * pow(10, -3));
 }
 
 
 // return: linear speed of the boat
-double test_speed(){ 
+double test_speed(){                 
     float acceleration = mpu.readNormalizeAccel().XAxis;
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
-    speed = (double)((acceleration/3.0) * get_time()  + speed);
+    acceleration = (acceleration / 3.0) - acc_drift;
+    
+    speed = (double)(acceleration * get_time()  + speed);
     return speed;
 }
 
-typedef struct {
-  double r = 0;
-  double angle = 0;
-  double x = 0;
-  double y = 0;
-} Direction;
-
-Direction dir;
-
-void direction_update() 
-{
+//updates location of boat
+Location location_update() {
    float acceleration = mpu.readNormalizeAccel().XAxis;
    float gyroscope = mpu.readNormalizeGyro().ZAxis;
    delay(250);
@@ -277,26 +332,45 @@ void direction_update()
    acceleration += mpu.readNormalizeAccel().XAxis;
    gyroscope += mpu.readNormalizeGyro().ZAxis;
    
-   acceleration = acceleration/3.0;
-   gyroscope = gyroscope/3.0;
+   acceleration = (acceleration / 3.0) - acc_drift;
+   gyroscope = gyroscope / 3.0;
    
    double time = get_time();
    
-   dir.r = (double) (acceleration * time * time  + speed * time + dir.r);
-   dir.angle = (double) (gyroscope * time + dir.angle) ; 
-   dir.x = dir.r*cos(dir.angle);
-   dir.y = dir.r*sin(dir.angle);
-   speed = (double)((acceleration/3.0) * time  + speed);
+   loc.r = (double) (acceleration * time * time  + speed * time + loc.r);
+   loc.angle = (double) (gyroscope * time + loc.angle) ; 
+   loc.x = loc.r * cos(loc.angle * DEG_TO_RAD);
+   loc.y = loc.r * sin(loc.angle * DEG_TO_RAD);
+   speed = (double) (acceleration * time  + speed);
    
-   return;
+   return loc;
 }
 
-//return: time from last mesure
-double get_time() {
-  previous = present;
-  present = millis();
-  return (double)((present-previous) * 10^(-3));
+boolean arrival(){
+  location_update();
+  if (abs(loc.r - dest.r) <= 5 && abs(loc.angle - dest.angle) <= 5) {
+    return true;
+    }
+  return false;
 }
+
+void update_arrival() {
+  if (arrival() && dest_index < (dest_total - 1)) {
+    dest = dests[ ++dest_index ];
+  } else if (arrival() && dest_index == (dest_total - 1 )) {
+    exit(0);
+  }
+}
+
+Location create_target(double x, double y) {
+  Location l; 
+  l.x = x;
+  l.y = y;
+  l.r = sqrt(x*x + y*y) ;
+  l.angle = atan2(y , x) * RAD_TO_DEG;  
+  return l;
+}
+
 
 //return: degree of the boat with respect to the wind in real time thanks to the windvane
 //TODO add values how hand wind vane gives info => see method with interrupt for good rotary encoder 
@@ -305,11 +379,14 @@ int degree_boat(){
 }
 
 
+
 //----------- end of the code -----------//
 
 void loop(){
   Serial.println("---BEGIN---");
-  tiller.write(90);
+  sail.write(10);
+  delay(1000);
+  sail.write(50);
   delay(1000);
   
   /*Serial.println("---degree boat---");
@@ -324,4 +401,21 @@ void loop(){
   delay(1000);
   tiller.write(108);
   delay(3000);*/
+  
+  /* Serial.println("---BEGIN---");
+  Serial.println("time: ");
+  Serial.println(get_time());
+  Serial.println("acceleration :");
+  Serial.println(mpu.readNormalizeAccel().XAxis);
+  Serial.println("linear speed :");
+  Serial.println(test_speed());
+  Serial.println(" angular accel :");
+  Serial.println(mpu.readNormalizeGyro().ZAxis);
+  Serial.println("direction : ");
+  location_update();
+  Serial.println(loc.r);
+  Serial.println(loc.angle);
+  Serial.println(loc.x);
+  Serial.println(loc.y); 
+  delay(2000); */
 }
