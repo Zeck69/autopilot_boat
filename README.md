@@ -1,15 +1,9 @@
 # Autonomous Sailboat
 
-## Designing the Boat
+![image](docs/assets/26f5.jpg)
 
-### 1)	Naive design and guidelines for the boat
-### 2)	First design
-### 3)	Design improvements
-### 4)	Printing the boat
-### 5)	Assembling the boat
-### 6)	The keel issue
-### 7)	Finalizing the boat
+**A project for automating a reduced model of Sailboat.**
 
-## Coding the Components Behavior
+Find all details here : 
 
-## Testing Our Solution
+***Project made in the context of the course CS-358 at EPFL, under the supervision of M. Koch and M. Stella.***
