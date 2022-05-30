@@ -26,12 +26,11 @@ Degree of freedom for boat witha given wind             |  Degree of freedom of 
 
 <em>First thing, we have to positionate the sail automatically with a given wind to move forward</em>
 
-* Predict an initial sail poition (cf. <b>degree_pred...(int boat_degree)</b>)
+* Predict an initial sail poition (cf. `degree_pred...(int boat_degree)`)
     * We first try to obtain geometrically the optimal position of the sail, computing the impact of the wind in the sail. This method was no where close to the desired objective and was very imprecise with the most extreme values (such as 0° or 180°).
     * Our second approach was to use pennants to experimentally see the impact of the wind in the sail and do a regression with the data to obtain a precise function. (%4.3 standard deviation)
-    <img src="./assets/test.png"
-     alt="Team Joy with the Boat"
-     style="display: block; max-height:230px; height: auto; width: auto" />
+    
+    ![](assets/test.png)  |  ![](assets/test3.png)
 
 * Optimize the position with actual input from sensors
     * T
