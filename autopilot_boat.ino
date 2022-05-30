@@ -85,7 +85,7 @@ int degrees_limit(int value){
 }
 
 // return: degree to add from horizontal depending on current angle (horizontal being the degree 0 for the sail on right side, and 180 on the left side)
-// function obtained via regression of theoritical values (TODO improve)
+// function obtained via regression of experimental values
 //new prediction model (-0,496*boat_degree+90) => loss reduced from 4,312%
 int degree_prediction_before_horizon(int boat_degree){ 
     if(boat_degree < 0){
