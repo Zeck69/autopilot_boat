@@ -6,6 +6,6 @@ logo: "https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-cartoon-red
 
 footer_content: "EPFL©2022 CS-358 | Project made by Felix Rodriguez, Ghita Tagemouati, Iris Segard, Marc Pitteloud, Ugo Balducci"
 
-colors:
-  primary: "#457b9d"
-  secondary: "#a8dadc"
+# colors:
+#   primary: "#457b9d"
+#   secondary: "#a8dadc"
