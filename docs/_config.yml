@@ -1,1 +1,5 @@
 theme: jekyll-theme-cayman
+remote_theme: just-the-docs/just-the-docs
+
+title: "Autonomous Sailboat"
+logo: "https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-cartoon-red-sailboat-illustration-image_1405274.jpg"
