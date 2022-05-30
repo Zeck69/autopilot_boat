@@ -15,7 +15,3 @@ nav_order: 2
 ### 5)	Assembling the boat
 ### 6)	The keel issue
 ### 7)	Finalizing the boat
-
-## Coding the Components Behavior
-
-## Testing Our Solution
