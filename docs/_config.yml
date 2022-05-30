@@ -2,7 +2,7 @@ theme: jekyll-theme-cayman
 remote_theme: just-the-docs/just-the-docs
 
 title: "Autonomous Sailboat"
-logo: "./assets/Plan de travail 1logo.png"
+logo: "https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-cartoon-red-sailboat-illustration-image_1405274.jpg"
 
 footer_content: "EPFL©2022 CS-358 | Project made by Felix Rodriguez, Ghita Tagemouati, Iris Segard, Marc Pitteloud, Ugo Balducci"
 
