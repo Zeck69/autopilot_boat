@@ -15,8 +15,5 @@ The project is born of our **motivation to challenge ourselves**. Not only did w
 
 *For the code and design files, please refer to the Github repository :*<br/>
 
-<div>
-![Github Repo](https://github.com/Zeck69/autopilot_boat){: .btn}
-</div>
-{: .d-flex .flex-justify-around}
+![Github Repo](https://github.com/Zeck69/autopilot_boat){: .btn .mx-auto}
 
