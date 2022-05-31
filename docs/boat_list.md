@@ -4,7 +4,7 @@ title: Before Starting
 nav_order: 2
 ---
 
-# Autonomous Sailboat
+# Before Starting
 
 Our project has two main phases, building the boat and automating it with components. It is thus the reason we will describe what is needed to make a 3D printed boat as well as how. But It is still possible to make your boat your way if you are more confortable with wood or another material. Another option is to buy one that fits the requirements of space and architecture for the components (easier than building a boat, but hard to find with such constraints). 
 
