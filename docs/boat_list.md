@@ -30,3 +30,5 @@ Our project has two main phases, building the boat and automating it with compon
 - [ ] Ciment (a small quantity)
 
 ## Little Lexicon on Sailboat
+
+![](assets/parts_of_boats.jpg)
