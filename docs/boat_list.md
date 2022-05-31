@@ -10,23 +10,23 @@ Our project has two main phases, building the boat and automating it with compon
 
 ## List of Required Components 
 
-[] A Microcontroller : Arduino Uno or Mega
-[] Cables - of all sorts to connect components
-[] 2 Servo motors : one for the sail, the other for the rudder
-[] an IMU
-[] a Wind Vane (or equivalent, we will explain our solution later)
-[] a GPS
-[] a Sail
-[] a Battery of 1700 mAh
+- [ ] A Microcontroller : Arduino Uno or Mega
+- [ ] Cables - of all sorts to connect components
+- [ ] 2 Servo motors : one for the sail, the other for the rudder
+- [ ] an IMU
+- [ ] a Wind Vane (or equivalent, we will explain our solution later)
+- [ ] a GPS
+- [ ] a Sail
+- [ ] a Battery of 1700 mAh
  
 ## List of Material You Might Need
-[] 3D Print Filament (PET-G recommended)
-[] Epoxy - to glue components together (don't underestimate gluing)
-[] Sanding Paper
-[] Lacquer Paint
-[] Silicon - for seal
-[] Soldering Material
-[] Heavy Bar of Metal - like lead
-[] Ciment (a small quantity)
+- [ ] 3D Print Filament (PET-G recommended)
+- [ ] Epoxy - to glue components together (don't underestimate gluing)
+- [ ] Sanding Paper
+- [ ] Lacquer Paint
+- [ ] Silicon - for seal
+- [ ] Soldering Material
+- [ ] Heavy Bar of Metal - like lead
+- [ ] Ciment (a small quantity)
 
 ## Little Lexicon on Sailboat
