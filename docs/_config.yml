@@ -6,6 +6,4 @@ logo: "/assets/logo.png"
 
 footer_content: "EPFL©2022 CS-358 | Project made by Felix Rodriguez, Ghita Tagemouati, Iris Segard, Marc Pitteloud, Ugo Balducci"
 
-# colors:
-#   primary: "#457b9d"
-#   secondary: "#a8dadc"
+color_scheme: foo
