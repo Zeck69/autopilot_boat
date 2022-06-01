@@ -10,11 +10,11 @@ nav_order: 3
 
 To build this boat, we needed to define clear guidelines that we had to follow to design our boat, as well as all the challenges we had to undertake. First of all, the major difficulties we had with this project come from the fact we will be using it in a marine/lake environnement. We thus had to think about :
 
-1. &nbsp; <img src="assets/floatting.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp; Flotation and Balance 
-2. &nbsp;<img src="assets/tiller.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Ability to Move Sail and Rudder 
-3. &nbsp;<img src="assets/servo.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Space for Components 
-4. &nbsp;<img src="assets/watter.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Watertightness for our Components 
-{: .fs-4 .fw-500 .text-center}
+1. &nbsp; [<img src="assets/floatting.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp; Flotation and Balance](#flotation-and-balance)
+2. &nbsp;[<img src="assets/tiller.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Ability to Move Sail and Rudder ](#ability-to-move-the-sail-and-the-rudder)
+3. &nbsp;[<img src="assets/servo.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Space for Components](#space-for-components)
+4. &nbsp;[<img src="assets/watter.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Watertightness for our Components](#watertightness-for-our-components)
+{: .fs-4 .fw-500}
 
 ### Flotation and Balance
 The first step to make a boat is to do something that **floats**. As our project is roughly a small prototype on wich we tried to experiment automation, we based our calculation on simple principles like **Archimede's principle**. With the design given in the repository, we can have **2.5 kg of mass in total**, boat included. This is well enough, as the major source of weight in our boat is the boat itself. The rest of the components only weight 400g.
