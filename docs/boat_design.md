@@ -14,7 +14,7 @@ To build this boat, we needed to define clear guidelines that we had to follow t
 2. &nbsp;<img src="assets/tiller.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Ability to Move Sail and Rudder 
 3. &nbsp;<img src="assets/servo.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Space for Components 
 4. &nbsp;<img src="assets/watter.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Watertightness for our Components 
-{: .fs-6 .fw-500 .text-center}
+{: .fs-4 .fw-500 .text-center}
 
 ### Flotation and Balance
 The first step to make a boat is to do something that **floats**. As our project is roughly a small prototype on wich we tried to experiment automation, we based our calculation on simple principles like **Archimede's principle**. With the design given in the repository, we can have **2.5 kg of mass in total**, boat included. This is well enough, as the major source of weight in our boat is the boat itself. The rest of the components only weight 400g.
