@@ -11,11 +11,8 @@ nav_order: 3
 To build this boat, we needed to define clear guidelines that we had to follow to design our boat, as well as all the challenges we had to undertake. First of all, the major difficulties we had with this project come from the fact we will be using it in a marine/lake environnement. We thus had to think about :
 
 1. &nbsp; <img src="assets/floatting.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp; Flotation and Balance 
-{: .fs-6 .fw-500 .text-center}
 2. &nbsp;<img src="assets/tiller.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Ability to Move Sail and Rudder 
-{: .fs-6 .fw-500 .text-center}
 3. &nbsp;<img src="assets/servo.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Space for Components 
-{: .fs-6 .fw-500 .text-center}
 4. &nbsp;<img src="assets/watter.png" alt="floating" style="width:50px;"/>&nbsp;&nbsp;&nbsp;&nbsp;Watertightness for our Components 
 {: .fs-6 .fw-500 .text-center}
 
