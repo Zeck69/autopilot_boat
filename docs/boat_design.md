@@ -36,8 +36,15 @@ The **balance** of the boat is as much important as the previous consideration. 
 
 ### Ability to move the sail and the rudder
 
+The water forces us to carefully think about how to connect the servo to the rudder. Indeed, as you will see our first design had a direct connection between the servo and a underwater rudder, but it was raising major concerns. The servo is not waterproof so we need to keep it away from water as much as possible. A ballbearing was not sufficient and adding to that the pressure underwater, we were affraid water would find its way up to the servo. We finally took another approach explained [here](#2-first-design).
+
+To move the sail is another challenge. There are many possibilities : either we use ropes like a sailor would do or we can directly connect a servo to set its position. We had the chance of having a strong servo wich made feasible the second one, taking away some difficulties.
 
 ### Space for components
+
+Although not the toughest guideline, making space for components is crucial in the boat design. It was our starting point to determine the overall dimensions. There are plenty of possible arrangements for the components, different ways to design the boat to fit them in. But the simpler the better, as the components need to be manipulated at some point. We also have to take into account cable : space or holes to route the cables, placing components to avoid long cables...
+
+<img src="assets/components.png" alt="floating" style="width:300px; display: flex; margin:auto"/>
 
 
 ### Watertightness for our components

@@ -8,7 +8,7 @@ nav_order: 2
 
 Our project has two main phases, building the boat and automating it with components. It is thus the reason we will describe what is needed to make a 3D printed boat as well as how. But It is still possible to make your boat your way if you are more confortable with wood or another material. Another option is to buy one that fits the requirements of space and architecture for the components (easier than building a boat, but hard to find with such constraints). 
 
-## :memo: List of Required Components 
+## 📋 List of Required Components 
 
 - [ ] A Microcontroller : Arduino Uno or Mega
 - [ ] Cables - of all sorts to connect components
@@ -19,7 +19,7 @@ Our project has two main phases, building the boat and automating it with compon
 - [ ] a Sail
 - [ ] a Battery of 1700 mAh
  
-## :memo: List of Material You Might Need
+## 📋 List of Material You Might Need
 - [ ] 3D Print Filament (PET-G recommended)
 - [ ] Epoxy - to glue components together (don't underestimate gluing)
 - [ ] Sanding Paper
@@ -29,7 +29,6 @@ Our project has two main phases, building the boat and automating it with compon
 - [ ] Heavy Bar of Metal - like lead
 - [ ] Ciment (a small quantity)
 
-:memo:
 
 ## Little Lexicon on Sailboat
 
