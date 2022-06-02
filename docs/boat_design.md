@@ -50,6 +50,10 @@ Although not the toughest guideline, making space for components is crucial in t
  
 ### Watertightness for our components
 
+The main problem with such automation project is the presence of **water**. This really complexify the way we have to think about our design. As previously mentioned, we need to be careful on the rudder axle, but also all the holes our boat has : for the sail, for the wind vane, ... But most of all, to protect our components, a cover over the compartments is mandatory, and should be tighly fixed to the hull.
+
+Another approach could be to have some waterproof components, like the servos, wich was not our case.
+
 ### Naive design Based on these guidelines (or almost...)
 
 
