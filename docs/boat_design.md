@@ -133,4 +133,6 @@ After some tests, we realized that the best way to make the boat watertight is t
 
 Our tests showed that the rudder is resistent enough to water force, and our boat assembly is strong and water resistant.
 
+**We really thank Antoine Truchot for helping us through this journey, and giving us his time to perfect the design.**
+
 <img src="assets/final_boat.jpeg" alt="floating" style="width:500px; display: flex; margin:auto"/>
