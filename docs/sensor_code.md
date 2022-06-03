@@ -56,9 +56,9 @@ double test_speed(){
   
    ```c++
  typedef struct {   // struct representing a location (initialized at 0)
-  double r = 0; // polar coordinates
-  double angle = 0;
-  double x = 0; // cartesian coordinates
+  double r = 0; // polar coordinates, r in meters
+  double angle = 0; // in degrees
+  double x = 0; // cartesian coordinates in meters
   double y = 0;
 }Location ;
   
