@@ -23,14 +23,14 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
   
    ![](assets/IMU.png)
   
-<br/>
+<br>
  <div style="text-align: justify"> Be careful, not all IMUs can be directly powered from a 5V source, some need an additional level shifter from 5V to 3.3V. If you have an IMU 6050 GY-521 like us for example, you should be just fine with a 5V output. </div>
   
- <br/>
+ <br>
   
  To code our IMU, we used the MPU6050 library created by jarzebski which allowed to create the functions detailed below : 
     
-  <br/>
+  <br>
   
   ### test_speed() 
   
@@ -51,7 +51,7 @@ double test_speed(){
 }
 ```
   
-  <br/>
+  <br>
   
   
   ### location_update()
@@ -98,7 +98,7 @@ Location location_update() {
 }
 ```
   
-  <br/>
+  <br>
   
   ### update_arrival()
   The function `update_arrival()` checks whether we have arrived at the next target (stored in dest) and whether it is the final destination. If the boat has arrived at the destination then it will update it to the next one in the array and if the boat has arrived at the final destination, the code exits.
@@ -113,7 +113,7 @@ void update_arrival() {
 }
 ```
   
-  <br/>
+  <br>
   
   ### arrival()
   `arrival()` calls `location_update()` and checks whether the boat has arrived to the next destination in the array of targets
@@ -127,7 +127,7 @@ void update_arrival() {
   return false;
 }
 ```
-  <br/>
+  <br>
   
   ### get_time()
   
@@ -145,7 +145,7 @@ double get_time() {
 }
 ```
   
-  <br/>
+  <br>
   
   ### create_target()
   

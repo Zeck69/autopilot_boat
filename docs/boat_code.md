@@ -68,7 +68,7 @@ void degree_sampling(int start_degree){
 }
 ```
 ## Turning methods
-<mark> Inside the code there is multiple methods with the same functionnality, some are named `show_IMU` because they were used to showcase the function without using a windvane and measuring turning with the gyroscope of the IMU. In these methods we rely on a variable `angle_boat` that is modified through the turnings to keep track of the position of the boat with respect to the wind.<br> Add to this, the implementation of these methods force to change the use of the clock of the arduino. Therefore our methods of `localisation` and `show_IMU` are not compatible at the moment.<br/>
+<mark> Inside the code there is multiple methods with the same functionnality, some are named `show_IMU` because they were used to showcase the function without using a windvane and measuring turning with the gyroscope of the IMU. In these methods we rely on a variable `angle_boat` that is modified through the turnings to keep track of the position of the boat with respect to the wind.<br> Add to this, the implementation of these methods force to change the use of the clock of the arduino. Therefore our methods of `localisation` and `show_IMU` are not compatible at the moment.<br>
 In order to make this methods work together we should use another clock or update both whenever any of them are called.
  </mark>
 
@@ -98,7 +98,7 @@ In order to make this methods work together we should use another clock or updat
  * if we want to go towards somewhere within the wind cone we will need to zizag our way upwards the wind with mutiple tacks
 
  #### Basic description:
- <br/><br/>
+ <br><br>
 
 (here I show the decision function for turning, go inside each method of the code for more detail)
 
@@ -175,7 +175,7 @@ void turning(int starting_angle, int desired_position){
 
  ## Smooth sail and tiller calibration
  In order to not make the boat sink via too fast changes of position, we develop some methods to move the servomotors more carefully.
-<br><br/>
+<br>
  <mark>This method was only implemented during the last part of the project and therefore has only been used for the navigation without windvane. Implementation in methods with windvane input is required (remplace every servo.write by this method).</mark>
 
 
