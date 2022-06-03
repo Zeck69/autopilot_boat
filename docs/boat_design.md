@@ -73,11 +73,11 @@ After a **total refinement** of the design, we ended up having a laser solo like
 <img src="assets/design.png" alt="floating" style="width: 80%; display: flex; margin:auto"/>
 <br>
 
-- To solve the issue with the rudder, we made a tank-like turret system wich consists in a curved-shaped bulkhead combined with the tiller. In this manner, the hole at the back of the hull that allows the tiller to pass is always covered and water is stopped.
+- To solve the issue with the rudder, we made a tank-like turret system wich consists in a curved-shaped bulkhead combined with the tiller. In this manner, the hole at the back of the hull that allows the tiller to pass is always covered and water is stopped. It is nevertheless only resistent to splashes, but should not be put under water.
 
 ![](assets/rudder.png)  |  ![](assets/boat_rudder.png)
 
-- The shape of the hull, as well as the mast and the dagger-board are drop-shaped to be more hydrodynamic.
+- The shape of the hull, as well as the mast and the dagger-board are tear-drop-shaped to be more hydrodynamic.
 
 - The keel in this design is clipped to the dagger-board thanks to a notch.
 
@@ -93,14 +93,14 @@ After a **total refinement** of the design, we ended up having a laser solo like
 
 ## 3)	Design improvements
 
-- We tried to improve the rudder by reducing the friction and improving the strength. But our attempts failed as the holes for it were really tight. Yet, we reprinted it with a greater infill value (% of plastic inside) to make it more robust.
+- We tried to improve the rudder by reducing the friction and improving the strength. But our attempts failed as the holes in the hull for it were really tight. Yet, we printed it again with a greater infill value (% of plastic inside) to make it more robust.
 
 - We had to make the cover thicker because of the *puck* we use for the mast. Indeed, the puck is too high to fit in a plate cover. It also enables us to better hold the mast.
 
 
 ## 4)	Printing the boat
 
-We desided for convenience to entirely print our parts in PET-G with Prusa printers. To fit in the printer, we had to cut the hull in 4 parts and the mast in 8 parts wich are all available in the GitHub repository. 
+We decided for convenience to entirely print our parts in PET-G with Prusa printers. To fit in the printer, we had to cut the hull in 4 parts and the mast in 8 parts wich are all available in the GitHub repository. 
 
 Printing such a boat took some time. For a single part of the hull, the printing time is about 15 hours. We also had some problem with parts that were bent because of the heat of the bed of the printer.
 
@@ -119,13 +119,23 @@ To construct our sail we needed : the sail, a wooden bar, a sewing machine, eyel
 
 
 ## 6)	The keel issue
+In order to have a well balanced boat that does not capsize, we had to make calculations to determine the force moment of the mast and the weight of the keel that could cancel this force moment. We obtained a weight of 750g.
+
+<p>
+    <img src="assets/keel_effect.jpg" alt="floating" style="width:500px; display: flex; margin:auto"/>
+    <em>The keel effect (counterweight)</em>
+</p>
+
 The keel was hard to make, as we needed it to be dense and heavy. We needed to iterate to find the perfect weight so that it counterbalance our mast. We finally ended up filling it with lead trapped in concrete.
 
 In total, our keel has a weight of 600g, wich is sufficient for our prototype.
 
-<img src="assets/keel_inside.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
+<p>
+    <img src="assets/keel_inside.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
+    <em>Sectional view of the keel</em>
+</p>
 
-With our first, the density we needed to achieve was too high. Therefore, we had to add some extensions to the dagger-board to put it further from the mass center and increase its volume.
+Our first try was not heavy enough, and its volume too small. The density needed to achieve our goal was tremendous. Therefore, we had to add some extensions to the dagger-board to put the keel further from the mass center and increase its volume.
 
 ## 7)	Finalizing the boat
 
