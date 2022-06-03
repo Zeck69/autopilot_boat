@@ -155,14 +155,16 @@ double get_time() {
 ```
 ### issues with the IMU and our solution
 
-The main issue we faced with the IMU was the acceloremeter's tendency to drift. The noise in the data meant that after integration, we had a 0.5m drift per second ! To remedy this problem we implemented two solutions : </div>
+The main issue we faced with the IMU was the acceloremeter's tendency to drift. The noise in the data meant that after integration, we had a 0.5m per second drift ! To remedy this problem we implemented two solutions : </div>
 
 First of all we took three measurements of the acceleration and averaged the total to smooth out any noise and variation in the data. </div>
 
-And second we calculate a constant in the setup which represents the average acceleration output when the IMU is at total rest which we then substract to the acceleration we measure when the boat is in motion
+And second we calculate a constant in the setup which represents the average acceleration when the IMU is at total rest which we then substract to the acceleration. </div>
+
+These two steps have allowed us to limit the drift considerably and find correct measurements. Even with these solutions, unfortunately the drift still does affect our data after a while. </div>
+
+The gyroscope did not have such an important drift and was only integrated once, so we did not see the need to implement the second solution. The first solution was nonetheless implemented to limit the impact of noise and anormal measurements.
 
 
-  
-  TODO: issues faced (drift, etc... )
   
 ## Wind vane
