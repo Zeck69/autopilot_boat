@@ -76,30 +76,30 @@ In order to make this methods work together we should use another clock or updat
  * The general method (cf `turning`) manages all maneuvers possibles, selecting the best fitting option for a given angle destination.
  * Input the final angle of the boat with respect to the wind and the program will chose which of the following methods to call.
 
-  ### Turning on the same of the wind
+### Turning on the same of the wind
  * if we don't want to change from side of the wind but get closer or further from the wind
 
- #### Basic description:
+#### Basic description:
 
 <div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if ta human was leaving the sail free to adapt to the turn. (cf `turning_settings`)</div> <br>
 
- ### Jibing
- * if we want to change from side of the wind with the wind in our backs
+### Jibing
+* if we want to change from side of the wind with the wind in our backs
  
- #### Basic description:
+#### Basic description:
 
- ### Tacking
- * if we want to cross the wind cone during a maneuver
- <figure class="video_container">
+### Tacking
+* if we want to cross the wind cone during a maneuver
+<figure class="video_container">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/gMEOex9GQWU?start=55" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </figure>
 
- #### Basic description:
- ### Beating
- * if we want to go towards somewhere within the wind cone we will need to zizag our way upwards the wind with mutiple tacks
+#### Basic description:
+### Beating
+* if we want to go towards somewhere within the wind cone we will need to zizag our way upwards the wind with mutiple tacks
 
- #### Basic description:
- <br>
+#### Basic description:
+<br>
 
 (here I show the decision function for turning, go inside each method of the code for more detail)
 
@@ -172,14 +172,14 @@ void turning(int starting_angle, int desired_position){
 }
 ```
 
- # Auxiliary useful methods
+# Auxiliary useful methods
 
- ## Smooth sail and tiller calibration
- In order to not make the boat sink via too fast changes of position, we develop some methods to move the servomotors more carefully.
+## Smooth sail and tiller calibration
+In order to not make the boat sink via too fast changes of position, we develop some methods to move the servomotors more carefully.
 <br>
- <mark>This method was only implemented during the last part of the project and therefore has only been used for the navigation without windvane. Implementation in methods with windvane input is required (remplace every servo.write by this method).</mark>
+<mark>This method was only implemented during the last part of the project and therefore has only been used for the navigation without windvane. Implementation in methods with windvane input is required (remplace every servo.write by this method).</mark>
 
 
 
- ## Degree calculations
- Making the degree span from -179° to 180° simplifies a lot calculations for turning
+## Degree calculations
+Making the degree span from -179° to 180° simplifies a lot calculations for turning
