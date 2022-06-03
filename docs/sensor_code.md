@@ -153,7 +153,7 @@ double get_time() {
   return l;
 }
 ```
-### issues with the IMU and our solution
+### Issues with the IMU and our solution
 
 The main issue we faced with the IMU was the acceloremeter's tendency to drift. The noise in the data meant that after integration, we had a 0.5m per second drift ! To remedy this problem we implemented two solutions : </div>
 
@@ -163,7 +163,7 @@ And second we calculate a constant in the setup which represents the average acc
 
 These two steps have allowed us to limit the drift considerably and find correct measurements. Even with these solutions, unfortunately the drift still does affect our data after a while. </div>
 
-The gyroscope did not have such an important drift and was only integrated once, so we did not see the need to implement the second solution. The first solution was nonetheless implemented to limit the impact of noise and anormal measurements.
+The gyroscope did not have such an important drift and was only integrated once, so we did not see the need to implement the second solution. The first solution was nonetheless implemented to limit the impact of noise and anormal measurements. 
 
 
   
