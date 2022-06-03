@@ -68,7 +68,7 @@ void degree_sampling(int start_degree){
 }
 ```
 ## Turning methods
-<mark> Inside the code there is multiple methods with the same functionnality, some are named `show_IMU` because they were used to showcase the function without using a windvane and measuring turning with the gyroscope of the IMU. In these methods we rely on a variable `angle_boat` that is modified through the turnings to keep track of the position of the boat with respect to the wind.<br> Add to this, the implementation of these methods force to change the use of the clock of the arduino. Therefore our methods of `localisation` and `show_IMU` are not compatible at the moment.<br/>
+<mark> Inside the code there is multiple methods with the same functionnality, some are named `show_IMU` because they were used to showcase the function without using a windvane and measuring turning with the gyroscope of the IMU. In these methods we rely on a variable `angle_boat` that is modified through the turnings to keep track of the position of the boat with respect to the wind.<br> Add to this, the implementation of these methods force to change the use of the clock of the arduino. Therefore our methods of `localisation` and `show_IMU` are not compatible at the moment.</br>
 In order to make this methods work together we should use another clock or update both whenever any of them are called.
  </mark>
 
@@ -80,27 +80,37 @@ In order to make this methods work together we should use another clock or updat
 
  #### Basic description:
 
-<div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if ta human was leaving the sail free to adapt to the turn. (cf `turning_settings`)</div> <br>
+<div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if a human was leaving the sail free to adapt to the turn. (cf <em>turning_settings</em>)</div> <br>
 
  ### Jibing
  * if we want to change from side of the wind with the wind in our backs
- 
- #### Basic description:
 
- ### Tacking
- * if we want to cross the wind cone during a maneuver
- <figure class="video_container">
-  <iframe src=" https://www.youtube.com/watch?v=gMEOex9GQWU&t=55s" frameborder="0" allowfullscreen="false"> </iframe>
+  <figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=JSpIAscG5cY" frameborder="0" allowfullscreen="false"> </iframe>
 </figure>
 
  #### Basic description:
- ### Beating
- * if we want to go towards somewhere within the wind cone we will need to zizag our way upwards the wind with mutiple tacks
+
+ <div style="text-align: justify"> We do a usual turn until a safe degree (around 150°) and then force a fast transition through the change of side of the wind by complete change of position of the sail (from one horizon to the other). During this transition we smoothly change the position of the sail via our prediction model.</div> <br>
+
+ ### Tacking
+ * if we want to cross the wind cone during a maneuver
+
+ <figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=gMEOex9GQWU&t=55s" frameborder="0" allowfullscreen="false"> </iframe>
+</figure>
 
  #### Basic description:
+ <div style="text-align: justify"> Similar as what we do for jibing, we do a usual turn until a the edge of the windcone, stabilize there and after do a fast transition of the sail and the tiller to get through the windcone as fast as possible. We end by optimizing the position of the sail once the desired degree reached. </div> <br>
+
+### Beating
+ * if we want to go towards somewhere within the wind cone we will need to zigzag our way upwards the wind with mutiple tacks
+
+ #### Basic description:
+ <div style="text-align: justify"> Theory says that we should stay at the closest 45° of the wind until our destination is perpendicular to the end of the boat and tack to the otherside. We should zigzag our way up. This theory is not trivial with our components so we decidede to implement a simpler method. In function of which position inside the windcone we desire to get, we spend more or less time in one side of the windcone or the other(cf <em>fct_time</em>). After this we only reuse our tacking method for 5 times and consider it is sufficient(cf <em>beating()</em>). Using this method we should call it inside a loop until a certain position is attained.</div> <br>
  <br/><br/>
 
-(here I show the decision function for turning, go inside each method of the code for more detail)
+(here I show the decision function for turning, go inside each method of the code for more detail, if there is a similar function `show_IMU` it has more updated conditions and optimal functions but will be less modular)
 
 ```c++
 /*
@@ -171,14 +181,84 @@ void turning(int starting_angle, int desired_position){
 }
 ```
 
- # Auxiliary useful methods
+# Auxiliary useful methods
 
- ## Smooth sail and tiller calibration
+## Smooth sail and tiller calibration
  In order to not make the boat sink via too fast changes of position, we develop some methods to move the servomotors more carefully.
 <br><br/>
  <mark>This method was only implemented during the last part of the project and therefore has only been used for the navigation without windvane. Implementation in methods with windvane input is required (remplace every servo.write by this method).</mark>
 
+## Test of speed
+Using IMU we obtain a linear acceleration that we try to stablize in order to mesure the actual speed of the boat.
+```c++
+// return: linear speed of the boat
+double test_speed(){                 
+    float acceleration = mpu.readNormalizeAccel().XAxis;
+    delay(500);
+    acceleration += mpu.readNormalizeAccel().XAxis;
+    delay(500);
+    acceleration += mpu.readNormalizeAccel().XAxis;
+    acceleration = (acceleration / 3.0) - acc_drift;
+    
+    speed = (double)(acceleration * get_time()  + speed);
+    return speed;
+}
+```
 
+## Optimize sail position
+Using the test speed we choose the best position of the sail experimentally each time, to correct any mistake made by the prediction method.
+```c++
+//input: start_degree = initial guess optimal position returned by degre_prediction
+//puts the sail on different positions to find the best speed and sets the optimal position;
+void degree_sampling(int start_degree){
+    double speeds[2*SPAN];
+    for (int i = -SPAN; i < SPAN; i++)
+    {
+        Serial.println(start_degree+2*i);
+        sail.write(start_degree+2*i);
+        delay(1000);
+        speeds[i+SPAN] = test_speed();
+        delay(500);
+    }
+    sail.write(start_degree + best_position(speeds));
+    speed = 0;
+    
+}
+```
 
- ## Degree calculations
- Making the degree span from -179° to 180° simplifies a lot calculations for turning
+## End turn
+Settings of the program to use after any maneuver
+```c++
+//end for IMU
+void end_turn_show_IMU(){
+    smoother_angle_write_tiller(90);
+    degree_sampling(degree_prediction_before_horizon(angle_boat));
+}
+```
+
+## Get position of the boat
+Method to read values from windvane if existing, to remodel to 360 if a correct windvane used.
+```c++
+//return: degree of the boat with respect to the wind in real time thanks to the windvane
+int degree_boat(){
+    return (int) ((double)analogRead(A0)/1023*180);
+}
+```
+
+## Degree calculations
+Making the degree span from -179° to 180° simplifies a lot calculations for turning
+```c++
+// return: degree between -179 and 180
+int degrees_limit(int value){
+    int res = value % 360;
+
+    if(res<=180 && res>-180){
+        return res;
+    }else if(res<=-180){
+        return (360+res);
+    }else if(res>180){
+        return -(360-res);
+    }
+    
+}
+```

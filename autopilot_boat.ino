@@ -52,9 +52,13 @@ void setup(){
   Serial.begin(9600);
   sail.attach(9);
   tiller.attach(10);
+  sail.write(90);
+  tiller.write(90);
+
 
   //IMU setup
-
+  Serial.println("start timer1");
+  Serial.println("5 min");
   mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);
   mpu.calibrateGyro();
   mpu.setThreshold(3);
@@ -72,7 +76,7 @@ void setup(){
   dests[0] = create_target(3.0, 5.0);
 
   //showing of turning
-  angle_boat = degree_boat();
+  angle_boat = 50;
   //for smoother need always previous value
   sail.write(90);
   tiller.write(90);
@@ -390,7 +394,6 @@ Location create_target(double x, double y) {
 
 
 //return: degree of the boat with respect to the wind in real time thanks to the windvane
-//TODO add values how hand wind vane gives info => see method with interrupt for good rotary encoder 
 int degree_boat(){
     return (int) ((double)analogRead(A0)/1023*180);
 }
@@ -637,6 +640,7 @@ void tacking_show_IMU(int desired_position){
             Serial.flush();
             smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
         }
+        angle_boat+= angle;
 
         smoother_angle_write_tiller(90);
         delay(1000);
@@ -648,7 +652,6 @@ void tacking_show_IMU(int desired_position){
 
         smoother_angle_write_tiller(90+19);
 
-        tiller.write(90+19);
         while(angle >= -(180-MAX_VAL_DEG_BOAT)+ desired_position){
             float gyroscope = mpu.readNormalizeGyro().ZAxis;
             delay(100);
@@ -663,6 +666,7 @@ void tacking_show_IMU(int desired_position){
             smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
             
         }
+        angle_boat+= angle;
         end_turn_show_IMU();
     }
 
@@ -743,19 +747,23 @@ void loop(){
   delay(3000);*/
 
   Serial.println("---BEGIN TEST TURNING IMU---");
+  sail.write(90);
+  tiller.write(90);
   delay(1000);
   Serial.println("everything good");
-  Serial.println(degree_boat());
+  Serial.println(angle_boat);
   Serial.println("reset here if not done before, wind must be fixed before setup");
   delay(5000);
   Serial.println("--- INITIAL POSITION OF BOAT WITH RESPECT TO WIND ---");
-  Serial.println(degree_boat());
+  Serial.println(angle_boat);
   Serial.println("---straight---");
   smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat));
+  delay(5000);
   Serial.println("--- TURNING TOWARDS 100° ---");
   Serial.flush();
   turning_show_IMU(-100);
   Serial.println("END");
+  smoother_angle_write_sail(90);
   
   exit(0);
   
