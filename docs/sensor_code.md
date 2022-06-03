@@ -32,7 +32,7 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
   
 ### test_speed() 
   
-  This method integrates the data of the accelerometer along the X-axis to find the linear speed of our boat uses the formula : `speed = acceleration * time + speed` to update the speed each time it is called
+  This method integrates the data of the accelerometer along the X-axis to find the linear speed of our boat and uses the formula `speed = acceleration * time + speed` to update the speed each time it is called
   
   ```c++
 // return: linear speed of the boat
