@@ -80,14 +80,18 @@ In order to make this methods work together we should use another clock or updat
 
  #### Basic description:
 
-<div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predit the position of the sail as smoothly as possible, as if the wind was moving the sail by itself.</div> <br>
+<div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if ta human was leaving the sail free to adapt to the turn. (cf `turning_settings`)</div> <br>
 
  ### Jibing
  * if we want to change from side of the wind with the wind in our backs
  
  #### Basic description:
+
  ### Tacking
  * if we want to cross the wind cone during a maneuver
+ <figure class="video_container">
+  <iframe src=" https://www.youtube.com/watch?v=gMEOex9GQWU&t=55s" frameborder="0" allowfullscreen="false"> </iframe>
+</figure>
 
  #### Basic description:
  ### Beating
@@ -100,7 +104,7 @@ In order to make this methods work together we should use another clock or updat
 
  ## Smooth sail and tiller calibration
  In order to not make the boat sink via too fast changes of position, we develop some methods to move the servomotors more carefully.
-<br/><br/>
+<br><br/>
  <mark>This method was only implemented during the last part of the project and therefore has only been used for the navigation without windvane. Implementation in methods with windvane input is required (remplace every servo.write by this method).</mark>
 
 
