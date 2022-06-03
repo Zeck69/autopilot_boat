@@ -29,8 +29,6 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
  <br>
   
  To code our IMU, we used the MPU6050 library created by jarzebski which allowed to create the functions detailed below : 
-    
-  <br>
   
   ### test_speed() 
   
@@ -50,8 +48,6 @@ double test_speed(){
     return speed;
 }
 ```
-  
-  <br>
   
   
   ### location_update()
@@ -98,8 +94,6 @@ Location location_update() {
 }
 ```
   
-  <br>
-  
   ### update_arrival()
   The function `update_arrival()` checks whether we have arrived at the next target (stored in dest) and whether it is the final destination. If the boat has arrived at the destination then it will update it to the next one in the array and if the boat has arrived at the final destination, the code exits.
   
@@ -113,8 +107,6 @@ void update_arrival() {
 }
 ```
   
-  <br>
-  
   ### arrival()
   `arrival()` calls `location_update()` and checks whether the boat has arrived to the next destination in the array of targets
   
@@ -127,7 +119,6 @@ void update_arrival() {
   return false;
 }
 ```
-  <br>
   
   ### get_time()
   
@@ -145,8 +136,6 @@ double get_time() {
 }
 ```
   
-  <br>
-  
   ### create_target()
   
   `create_target` takes as input two coordinates x and y to translates them to an angle and radius to return a Location target for the boat. This function is useful in the setup to initialise our array of stops for the boat to go to
@@ -161,7 +150,7 @@ double get_time() {
   return l;
 }
 ```
-<br/>
+<br>
   
   TODO: Do I keep all code ? If so comment it and issues faced (drift, etc... )
   
