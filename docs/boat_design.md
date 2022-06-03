@@ -108,6 +108,8 @@ Printing such a boat took some time. For a single part of the hull, the printing
 
 ### Gluing parts together
 
+To put parts together, we used epoxy glue for all the components.   
+
 ### The Sail
 
 For the sail, we contact the SP 80 team to ask them if they can give us a piece of a sail. They redirect us to the SKIL. We get 3 different types of sails and we choose the lightest one because our objectif wasn’t the performance but just to make our boat move.
@@ -126,3 +128,9 @@ In total, our keel has a weight of 600g, wich is sufficient for our prototype.
 With our first, the density we needed to achieve was too high. Therefore, we had to add some extensions to the dagger-board to put it further from the mass center and increase its volume.
 
 ## 7)	Finalizing the boat
+
+After some tests, we realized that the best way to make the boat watertight is to tape the cover with gaffer tape. We also faced a last minute issue : our aluminium bar in the mast was not glued, only clamped inside it. But during our tests, the bar came out : we thus used screws to fix this.
+
+Our tests showed that the rudder is resistent enough to water force, and our boat assembly is strong and water resistant.
+
+<img src="assets/final_boat.jpeg" alt="floating" style="width:500px; display: flex; margin:auto"/>
