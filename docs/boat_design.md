@@ -80,5 +80,14 @@ To solve the issue with the rudder, we made a tank-like turret system wich consi
 ## 3)	Design improvements
 ## 4)	Printing the boat
 ## 5)	Assembling the boat
+
+#### The Sail
+
+For the sail, we contact the SP 80 team to ask them if they can give us a piece of a sail. They redirect us to the SKIL. We get 3 different types of sails and we choose the lightest one because our objectif wasn’t the performance but just to make our boat move.
+<br>
+
+To construct our sail we needed : the sail, a wooden bar, a sewing machine, eyelets fastenings and our mast. First, we draw the form that we want, making sure that it’s big enough to have freedom of movement. We decided to make a triangular shape with rounded sides. Then we cut it and strengthen the side parallel to the mast by adding the wooden bar that we place at the sail and attach by sewing. Then we add a lining in the corner and eyelet fastenings to attach the sail to the mast with clamping clips.
+
+
 ## 6)	The keel issue
 ## 7)	Finalizing the boat

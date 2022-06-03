@@ -168,3 +168,10 @@ The gyroscope did not have such an important drift and was only integrated once,
 
   
 ## Wind vane
+One of the principal components of our boat is the wind vane. We will use it to find the direction of the wind to calculate the angle that we need to set in our servo to move our boat efficiently. First, as we wanted to focus on other tasks, the idea was to buy one ([link](https://www.lextronic.fr/girouette-compatible-arduino-microbit-grouve-60465.html)) . Due to some reasons, we couldn’t get it. Our solution was to use a potentiometer and put a piece on top. We tested two types :
+- The first one (ref : SKU783982) had a lot of friction so the wind was not enough to move it. However, we tried to code it. We first tried without any library but we noticed that depending on the speed of rotation, the angle found was not the same. Then we tried a library (Encoder.h) but the accuracy of the angle deteriorated over time.
+- The second one was really accurate but the principal problem was that it had a range from 0 to 180 and not 360
+
+
+Finally, after a lot of tests we choose to make our potentiometer using a 3D printed piece, a bearing, a bristol paper, a pencil, a needle, 3 cables and a 3D printed wind vane. The idea was to construct a cylinder support where we put the paper colored with the pencil. Then we associate our 3D wind vane in the bottom with the bearing and the needle perpendicular to it. After we connect a cable to the needle and to the ends of the paper so we can use the resistance when the metal rod moves around.\
+However, when the wind vane moved, the cables made it moves back so it was not really efficient. So, we choose to assume a constant wind and use the IMU to see the displacement and find the optimal position of the sail by optimization. 
