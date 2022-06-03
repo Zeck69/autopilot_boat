@@ -44,6 +44,9 @@ int dest_total;
 Servo sail;
 Servo tiller;
 
+//position with IMU instead of windvane
+int angle_boat = 0;
+
 void setup(){ 
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
@@ -58,15 +61,21 @@ void setup(){
   
    // compensating for drift
   acc_drift = mpu.readNormalizeAccel().XAxis;
-  delay(200); 
+  delay(400); 
   acc_drift += mpu.readNormalizeAccel().XAxis;
-  delay(200); 
+  delay(400); 
   acc_drift += mpu.readNormalizeAccel().XAxis;
   acc_drift = acc_drift / 3.0;
 
   // choosing our desired destinations
   dest_total = 1;
   dests[0] = create_target(3.0, 5.0);
+
+  //showing of turning
+  angle_boat = degree_boat();
+  //for smoother need always previous value
+  sail.write(90);
+  tiller.write(90);
 
 
 }
@@ -76,9 +85,11 @@ void setup(){
 int degrees_limit(int value){
     int res = value % 360;
 
-    if(res<=180){
+    if(res<=180 && res>-180){
         return res;
-    }else{
+    }else if(res<=-180){
+        return (360+res);
+    }else if(res>180){
         return -(360-res);
     }
     
@@ -102,7 +113,8 @@ void degree_sampling(int start_degree){
     double speeds[2*SPAN];
     for (int i = -SPAN; i < SPAN; i++)
     {
-        sail.write(start_degree+i);
+        Serial.println(start_degree+2*i);
+        sail.write(start_degree+2*i);
         delay(1000);
         speeds[i+SPAN] = test_speed();
         delay(500);
@@ -140,6 +152,7 @@ void turning(int starting_angle, int desired_position){
             while(degree_boat() < degrees_limit(desired_position)){
                 turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
+            Serial.println("end turning while");
             //turn finished at this point
            end_turn();
 
@@ -149,6 +162,7 @@ void turning(int starting_angle, int desired_position){
                 turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
+            Serial.println("end turning while");
             end_turn();
         }
     }else if(degrees_limit(starting_angle) <= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
@@ -159,6 +173,7 @@ void turning(int starting_angle, int desired_position){
                 turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
+            Serial.println("end turning while");
             end_turn();
 
         }else if(degrees_limit(desired_position)- degrees_limit(starting_angle) < 0){
@@ -167,6 +182,7 @@ void turning(int starting_angle, int desired_position){
                 turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
             }
             //turn finished at this point
+            Serial.println("end turning while");
             end_turn();
         }
         
@@ -197,16 +213,19 @@ void turning_settings(int diff,int time){
     if(diff > 20){
         tiller.write(90-(19));
         delay(time);
+        Serial.println(degree_boat());
         sail.write(degree_prediction_before_horizon(degree_boat())); 
         delay(time);
     }else if(diff<-20){
         tiller.write(90-(-19));
         delay(time);
+        Serial.println(degree_boat());
         sail.write(degree_prediction_before_horizon(degree_boat())); 
         delay(time);
     }else{
         tiller.write(90-(diff));
         delay(time);
+        Serial.println(degree_boat());
         sail.write(degree_prediction_before_horizon(degree_boat())); 
         delay(time);
     }
@@ -214,7 +233,7 @@ void turning_settings(int diff,int time){
 
 void end_turn(){
     tiller.write(90);
-    degree_sampling(degree_boat());
+    degree_sampling(degree_prediction_before_horizon(degree_boat()));
 }
 
 //turning mechanism for tacking
@@ -293,7 +312,6 @@ void beating(int starting_angle, int desired_position){
             turning(degree_boat(),180-MAX_VAL_DEG_BOAT);
         }
     }
-    //idéal: arriver jusqu'au pt ou t'es à 90° de ton objectif => no possible way
 }
 
 double fct_time(int x){
@@ -311,9 +329,9 @@ double get_time() {
 // return: linear speed of the boat
 double test_speed(){                 
     float acceleration = mpu.readNormalizeAccel().XAxis;
-    delay(250);
+    delay(500);
     acceleration += mpu.readNormalizeAccel().XAxis;
-    delay(250);
+    delay(500);
     acceleration += mpu.readNormalizeAccel().XAxis;
     acceleration = (acceleration / 3.0) - acc_drift;
     
@@ -325,10 +343,10 @@ double test_speed(){
 Location location_update() {
    float acceleration = mpu.readNormalizeAccel().XAxis;
    float gyroscope = mpu.readNormalizeGyro().ZAxis;
-   delay(250);
+   delay(500);
    acceleration += mpu.readNormalizeAccel().XAxis;
    gyroscope += mpu.readNormalizeGyro().ZAxis;
-   delay(250);
+   delay(500);
    acceleration += mpu.readNormalizeAccel().XAxis;
    gyroscope += mpu.readNormalizeGyro().ZAxis;
    
@@ -379,15 +397,336 @@ int degree_boat(){
 }
 
 
+int degree_boat_tacking(){
+    return (int) map(analogRead(A0),0,1023,-90,90);
+}
+
+
+
+
+void turning_show_IMU(int desired_position){
+    int diff = degrees_limit(desired_position)- degrees_limit(angle_boat);
+    if(degrees_limit(angle_boat) >= 0 && degrees_limit(desired_position) >= 180 - MAX_VAL_DEG_BOAT){
+        //turning in the right side of the wind, without changing sides
+        if(diff > 0){
+            // we have to go further appart from the wind
+            double angle = 0.0;
+            double time1 = get_time();
+            while(angle <= diff){
+                if(diff > 20){
+                    tiller.write(90-(19));
+                }else if(diff<-20){
+                    tiller.write(90-(-19));
+                }else{
+                    tiller.write(90-(diff));
+                }
+
+
+                float gyroscope = mpu.readNormalizeGyro().ZAxis;
+                delay(100);
+                gyroscope += mpu.readNormalizeGyro().ZAxis;
+                delay(100);
+                gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+                angle += (double)(get_time()*(gyroscope/3.0));
+                Serial.println(angle);
+                smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+            }
+            Serial.println("end turning while");
+            angle_boat += angle;
+            
+            //or angle_boat= desired_position;
+            Serial.println(angle_boat);
+            //turn finished at this point
+           end_turn_show_IMU();
+
+        }else if(diff < 0){
+            //we have to get closer to the wind
+            double angle = 0.0;
+            double time1 = get_time();
+            while(angle >= diff){
+
+                if(diff > 20){
+                    tiller.write(90-(19));
+                }else if(diff<-20){
+                    tiller.write(90-(-19));
+                }else{
+                    tiller.write(90-(diff));
+                }
+                
+                float gyroscope = mpu.readNormalizeGyro().ZAxis;
+                delay(100);
+                gyroscope += mpu.readNormalizeGyro().ZAxis;
+                delay(100);
+                gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+                angle += (double)(get_time()*(gyroscope/3.0));
+                smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+            }
+            Serial.println("end turning while");
+            angle_boat += angle;
+            //or angle_boat= desired_position;
+            Serial.println(angle_boat);
+            //turn finished at this point
+           end_turn_show_IMU();
+        }
+    } else if(degrees_limit(angle_boat) <= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+        //turning in the left side of the wind
+        if(diff > 0){
+            // we have to get closer to the wind
+            double angle = 0.0;
+            double time1 = get_time();
+            while(angle <= diff){
+                if(diff > 20){
+                    tiller.write(90-(19));
+                }else if(diff<-20){
+                    tiller.write(90-(-19));
+                }else{
+                    tiller.write(90-(diff));
+                }
+
+
+                float gyroscope = mpu.readNormalizeGyro().ZAxis;
+                delay(250);
+                gyroscope += mpu.readNormalizeGyro().ZAxis;
+                delay(250);
+                gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+                angle += (double)(get_time()*(gyroscope/3.0));
+                smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+            }
+            Serial.println("end turning while");
+            angle_boat += angle;
+            
+            //or angle_boat= desired_position;
+            Serial.println(angle_boat);
+            //turn finished at this point
+           end_turn_show_IMU();
+
+        }else if(diff < 0){
+            //we have to get further appart from the wind
+            double angle = 0.0;
+            double time1 = get_time();
+            while(angle >= diff){
+                    if(diff > 20){
+                        tiller.write(90-(19));
+                    }else if(diff<-20){
+                        tiller.write(90-(-19));
+                    }else{
+                        tiller.write(90-(diff));
+                    }
+            float gyroscope = mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+            angle += (double)(get_time()*(gyroscope/3.0));
+            smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+            }
+
+            Serial.println("end turning while");
+            angle_boat += angle;
+            //or angle_boat= desired_position;
+            Serial.println(angle_boat);
+            //turn finished at this point
+           end_turn_show_IMU();
+        
+    }
+}else{
+        if(degrees_limit(angle_boat) <= 0 && degrees_limit(desired_position) >= (180 - MAX_VAL_DEG_BOAT)){
+            if(degrees_limit(desired_position)<= 180+degrees_limit(angle_boat)){
+                tacking_show_IMU(desired_position);
+            }else{
+                Serial.println("not implemented for IMU");
+                Serial.flush();
+            }
+
+        }else if(degrees_limit(angle_boat) >= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+            Serial.println("entered in suposed tacking");
+            Serial.println(degrees_limit(desired_position));
+            Serial.flush();
+            if(degrees_limit(desired_position) >= -(180-degrees_limit(angle_boat))){
+                tacking_show_IMU(degrees_limit(desired_position));
+            }else{
+                Serial.println("not implemented for IMU");
+                Serial.flush();
+            }
+        }else{
+            Serial.println("not implemented for IMU");
+            Serial.flush();
+        }
+    }
+}
+
+//end for IMU
+void end_turn_show_IMU(){
+    smoother_angle_write_tiller(90);
+    degree_sampling(degree_prediction_before_horizon(angle_boat));
+}
+
+//tacking IMU
+void tacking_show_IMU(int desired_position){
+    int diff = 0;
+    Serial.println("enter tacking");
+    if(desired_position > 0){
+        Serial.println("positive turn");
+        //approach until -45 position
+        diff = -(180 - MAX_VAL_DEG_BOAT) - degrees_limit(angle_boat);
+        double angle = 0.0;
+        double time1 = get_time();
+
+        smoother_angle_write_tiller(90-19);
+
+        while( angle <= diff){
+            float gyroscope = mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+            angle += (double)(get_time()*(gyroscope/3.0));
+            Serial.println(angle);
+            Serial.println("before -45°");
+            Serial.flush();
+            smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+        }
+        smoother_angle_write_tiller(90);
+        delay(1000);
+        
+
+        //reset of the mesures for turning
+        angle = 0.0;
+        time1 = get_time();
+
+        smoother_angle_write_tiller(90-19);
+
+        while( angle <= (180-MAX_VAL_DEG_BOAT) + degrees_limit(desired_position)){
+            float gyroscope = mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+            angle += (double)(get_time()*(gyroscope/3.0));
+            Serial.println(angle);
+            Serial.println("from -45 to pos");
+            Serial.flush();
+            smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+            
+        }
+        end_turn_show_IMU();
+    }else{
+        Serial.println("negative turn");
+        //approach until -45 position
+        diff = (180 - MAX_VAL_DEG_BOAT) - degrees_limit(angle_boat);
+        double angle = 0.0;
+        double time1 = get_time();
+
+        smoother_angle_write_tiller(90+19);
+
+        while( angle >= diff){
+            float gyroscope = mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+            angle += (double)(get_time()*(gyroscope/3.0));
+            Serial.println(angle);
+            Serial.println("before 45°");
+            Serial.flush();
+            smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+        }
+
+        smoother_angle_write_tiller(90);
+        delay(1000);
+    
+
+        //reset of the mesures for turning
+        angle = 0.0;
+        time1 = get_time();
+
+        smoother_angle_write_tiller(90+19);
+
+        tiller.write(90+19);
+        while(angle >= -(180-MAX_VAL_DEG_BOAT)+ desired_position){
+            float gyroscope = mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+            delay(100);
+            gyroscope += mpu.readNormalizeGyro().ZAxis;
+
+            angle += (double)(get_time()*(gyroscope/3.0));
+            Serial.println(angle);
+            Serial.println("from 45 to position");
+            Serial.flush();
+            smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat+angle));
+            
+        }
+        end_turn_show_IMU();
+    }
+
+}
+
+void smoother_angle_write_sail(int angle){
+    int current = sail.read();
+    int count = angle - current;
+    if(count>0){
+        for (size_t i = 1; i <= count; i++)
+        {
+            sail.write(current+i);
+            delay(10);
+        }
+
+    }else if(count <0){
+        for (size_t i = 1; i <= -count; i++)
+        {
+            sail.write(current-i);
+            delay(10);
+        }
+    }
+}
+
+void smoother_angle_write_tiller(int angle){
+    int current = tiller.read();
+    int count = angle - current;
+    if(count>0){
+        for (size_t i = 1; i <= count; i++)
+        {
+            tiller.write(current+i);
+            delay(10);
+        }
+
+    }else if(count <0){
+        for (size_t i = 1; i <= -count; i++)
+        {
+            tiller.write(current-i);
+            delay(10);
+        }
+    }
+}
+
 
 //----------- end of the code -----------//
 
 void loop(){
-  Serial.println("---BEGIN---");
-  sail.write(10);
+  
+  /* tiller.write(90);
+  sail.write(90);
+  Serial.println("---degree---");
+  Serial.println(degree_boat());
+  delay(5000);
+  Serial.println("---straight---");
+  sail.write(degree_prediction_before_horizon(degree_boat()));
+  delay(5000);
+  Serial.println("---turning---");
+  Serial.println(degree_boat());
+  turning(degree_boat(),130);
+  Serial.println("end turn");
   delay(1000);
-  sail.write(50);
-  delay(1000);
+
+  exit(0); */
   
   /*Serial.println("---degree boat---");
   Serial.println(degree_boat());
@@ -395,27 +734,45 @@ void loop(){
   Serial.println(degree_prediction_before_horizon(degree_boat()));
   sail.write(degree_prediction_before_horizon(degree_boat()));*/
   
-  /*tiller.write(72);
+  /*
+  Serial.println("--- BEGIN MOBILITY TEST TILLER ---");
+  tiller.write(72);
   delay(1000);
   tiller.write(90);
   delay(1000);
   tiller.write(108);
   delay(3000);*/
+
+  Serial.println("---BEGIN TEST TURNING IMU---");
+  delay(1000);
+  Serial.println("everything good");
+  Serial.println(degree_boat());
+  Serial.println("reset here if not done before, wind must be fixed before setup");
+  delay(5000);
+  Serial.println("--- INITIAL POSITION OF BOAT WITH RESPECT TO WIND ---");
+  Serial.println(degree_boat());
+  Serial.println("---straight---");
+  smoother_angle_write_sail(degree_prediction_before_horizon(angle_boat));
+  Serial.println("--- TURNING TOWARDS 100° ---");
+  Serial.flush();
+  turning_show_IMU(-100);
+  Serial.println("END");
   
-  /* Serial.println("---BEGIN---");
-  Serial.println("time: ");
-  Serial.println(get_time());
-  Serial.println("acceleration :");
-  Serial.println(mpu.readNormalizeAccel().XAxis);
+  exit(0);
+  
+ /* Serial.println("---new data---");
   Serial.println("linear speed :");
   Serial.println(test_speed());
-  Serial.println(" angular accel :");
-  Serial.println(mpu.readNormalizeGyro().ZAxis);
+  
   Serial.println("direction : ");
   location_update();
+  Serial.println("r : ");
   Serial.println(loc.r);
+  Serial.println("angle : ");
   Serial.println(loc.angle);
+  Serial.println("x : ");
   Serial.println(loc.x);
+  Serial.println("y : ");
   Serial.println(loc.y); 
-  delay(2000); */
+  delay(4000); */
 }
