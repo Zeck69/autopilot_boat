@@ -37,14 +37,14 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
   ```c++
 // return: linear speed of the boat
 double test_speed(){                 
-    float acceleration = mpu.readNormalizeAccel().XAxis;
+    float acceleration = mpu.readNormalizeAccel().XAxis; // measuring acceleration three times
     delay(250);
     acceleration += mpu.readNormalizeAccel().XAxis;
     delay(250);
-    acceleration += mpu.readNormalizeAccel().XAxis;
-    acceleration = (acceleration / 3.0) - acc_drift;
+    acceleration += mpu.readNormalizeAccel().XAxis; 
+    acceleration = (acceleration / 3.0) - acc_drift; // taking the average and substracting drift
     
-    speed = (double)(acceleration * get_time()  + speed);
+    speed = (double)(acceleration * get_time()  + speed); // integration of the acceleration
     return speed;
 }
 ```
@@ -55,18 +55,18 @@ double test_speed(){
   `location_update` is used to have a real time location of the boat named loc by integrating twice the acceleration according to the X-axis (as the unmodified data in in m/s^2) and integrating the angular speed from the gyroscope (rad/s) once according to the Z-axis. We hence have the radial and angular position of the boat. This data is then stored in a new structure we have named Location which has the radius, angle but also converts the position into cartesian coordinates x,y (with the origin at the initial location of the boat)
   
    ```c++
- typedef struct {   // initialized at 0
-  double r = 0;
+ typedef struct {   // struct representing a location (initialized at 0)
+  double r = 0; // polar coordinates
   double angle = 0;
-  double x = 0;
+  double x = 0; // cartesian coordinates
   double y = 0;
 }Location ;
   
-Location loc;  
-Location dest;
-Location dests[MAX_STOPS];
-int dest_index = 0; 
-int dest_total; 
+Location loc;   // current location of the boat
+Location dest;  // next destination for the boat
+Location dests[MAX_STOPS]; // array of all the destinations the boat will reach
+int dest_index = 0;  // index of the current destination
+int dest_total;  // total number of destinations
   
 //updates location of boat
 Location location_update() {
@@ -84,11 +84,11 @@ Location location_update() {
    
    double time = get_time();
    
-   loc.r = (double) (acceleration * time * time  + speed * time + loc.r);
-   loc.angle = (double) (gyroscope * time + loc.angle) ; 
-   loc.x = loc.r * cos(loc.angle * DEG_TO_RAD);
+   loc.r = (double) (acceleration * time * time  + speed * time + loc.r); // double integration of the X-axis acceleration
+   loc.angle = (double) (gyroscope * time + loc.angle) ; // integration of the angular speed
+   loc.x = loc.r * cos(loc.angle * DEG_TO_RAD);  // converts to cartesian coordinates
    loc.y = loc.r * sin(loc.angle * DEG_TO_RAD);
-   speed = (double) (acceleration * time  + speed);
+   speed = (double) (acceleration * time  + speed); // update of the speed to keep an accurate number
    
    return loc;
 }
@@ -153,7 +153,15 @@ double get_time() {
   return l;
 }
 ```
-<br>
+### issues with the IMU and our solution
+
+The main issue we faced with the IMU was the acceloremeter's tendency to drift. The noise in the data meant that after integration, we had a 0.5m drift per second ! To remedy this problem we implemented two solutions : </div>
+
+First of all we took three measurements of the acceleration and averaged the total to smooth out any noise and variation in the data. </div>
+
+And second we calculate a constant in the setup which represents the average acceleration output when the IMU is at total rest which we then substract to the acceleration we measure when the boat is in motion
+
+
   
   TODO: issues faced (drift, etc... )
   
