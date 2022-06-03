@@ -75,26 +75,28 @@ In order to make this methods work together we should use another clock or updat
  * The general method (cf `turning`) manages all maneuvers possibles, selecting the best fitting option for a given angle destination.
  * Input the final angle of the boat with respect to the wind and the program will chose which of the following methods to call.
 
- <br/>
-
  ### Turning on the same of the wind
  * if we don't want to change from side of the wind but get closer or further from the wind
 
  <figure class="video_container">
   <iframe src=assets/BasicMovecopia.MOV allowfullscreen="false"> </iframe>
 </figure>
+
  #### Basic description:
+
+<div style="text-align: justify"> We compute the angle difference between our destination and our current position to  </div> <br>
+
  ### Jibing
  * if we want to change from side of the wind with the wind in our backs
-  <br/>
+ 
  #### Basic description:
  ### Tacking
  * if we want to cross the wind cone during a maneuver
-  <br/>
+
  #### Basic description:
  ### Beating
  * if we want to go towards somewhere within the wind cone we will need to zizag our way upwards the wind with mutiple tacks
-  <br/>
+
  #### Basic description:
  <br/><br/>
 
