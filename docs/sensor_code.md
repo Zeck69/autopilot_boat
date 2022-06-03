@@ -30,7 +30,7 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
   
  To code our IMU, we used the MPU6050 library created by jarzebski which allowed to create the functions detailed below : 
   
-  ### test_speed() 
+### test_speed() 
   
   This method integrates the data of the accelerometer along the X-axis to find the linear speed of our boat uses the formula : `speed = acceleration * time + speed` to update the speed each time it is called
   
@@ -50,7 +50,7 @@ double test_speed(){
 ```
   
   
-  ### location_update()
+### location_update()
   
   `location_update` is used to have a real time location of the boat named loc by integrating twice the acceleration according to the X-axis (as the unmodified data in in m/s^2) and integrating the angular speed from the gyroscope (rad/s) once according to the Z-axis. We hence have the radial and angular position of the boat. This data is then stored in a new structure we have named Location which has the radius, angle but also converts the position into cartesian coordinates x,y (with the origin at the initial location of the boat)
   
@@ -100,9 +100,9 @@ Location location_update() {
  ```c++  
 void update_arrival() {
   if (arrival() && dest_index < (dest_total - 1)) {
-    dest = dests[ ++dest_index ];
+    dest = dests[ ++dest_index ]; // if we have arrived to the current destination then the destination is updated to the next location in the array
   } else if ( dest_index == (dest_total - 1 )) {
-    exit(0);
+    exit(0); // if we have arrived to our final stop then the code extis
   }
 }
 ```
@@ -112,15 +112,15 @@ void update_arrival() {
   
  ```c++
   boolean arrival(){
-  location_update();
+  location_update();  
   if (abs(loc.r - dest.r) <= 5 && abs(loc.angle - dest.angle) <= 5) {
-    return true;
+    return true; // if we are close enough to the target we return true
     }
   return false;
 }
 ```
   
-  ### get_time()
+### get_time()
   
   `get_time` works with two global variables previous and present and allows to calculate the time passed (in seconds) since the last time it was called. It uses the `millis()` function of the arduino which returns time in milliseconds. 
   
@@ -130,11 +130,12 @@ unsigned long present;
   
 //return: time from last mesure
 double get_time() {
-  previous = present;
+  previous = present; // updates time stamps
   present = millis();
-  return (double) ((present - previous) * pow(10, -3));
+  return (double) ((present - previous) * pow(10, -3));  // converts milliseconds to seconds
 }
 ```
+
   
   ### create_target()
   
@@ -142,16 +143,16 @@ double get_time() {
   
  ```c++
   Location create_target(double x, double y) {
-  Location l; 
+  Location l;  // creates target
   l.x = x;
   l.y = y;
-  l.r = sqrt(x*x + y*y) ;
+  l.r = sqrt(x*x + y*y) ;  // converts to polar coordinates
   l.angle = atan2(y , x) * RAD_TO_DEG;  
   return l;
 }
 ```
 <br>
   
-  TODO: Do I keep all code ? If so comment it and issues faced (drift, etc... )
+  TODO: issues faced (drift, etc... )
   
 ## Wind vane
