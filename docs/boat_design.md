@@ -59,11 +59,24 @@ Another approach could be to have some waterproof components, like the servos, w
 Our first design had a more complicated structure. We tried to arrange components on top of each other, wich made the boat less long. But at the same time, it was increasing the difficulty to manipulate the components. The boat was however thicker and not very hydrodynamic. Here is the result :
 
 <img src="assets/first_design.png" alt="floating" style="width: 80%; display: flex; margin:auto"/>
+<br>
 
 ![](assets/first_boat_front.png)  |  ![](assets/first_boat_top.png)
 
+Except floatability and balance of this design, the main issue we tried to address is the watertightness. We made different compartment to isolate all the components, in case one is flood. The cover is here to protect the inside of the boat. However, as previously mentionned, the fact that the rudder axle is directly connected to the servo in this design might have caused some troubles. Its complexity might also have been hard to manage and assemble, specially when testing.
 
 ## 2)	First design
+
+After a total refinement of the design, we ended up having a laser solo like shape, with a simpler hull and space arrangement.
+
+<br>
+<img src="assets/design.png" alt="floating" style="width: 80%; display: flex; margin:auto"/>
+<br>
+
+To solve the issue with the rudder, we made a tank-like turret system wich consists in a curved-shaped bulkhead combined with the tiller. In this manner, the hole at the back of the hull that allows the tiller to pass is always covered and water is stopped.
+
+![](assets/rudder.png)  |  ![](assets/boat_rudder.png)
+
 ## 3)	Design improvements
 ## 4)	Printing the boat
 ## 5)	Assembling the boat
