@@ -33,20 +33,132 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
   
   This method integrates the data of the accelerometer along the X-axis to find the linear speed of our boat uses the formula : `speed = acceleration * time + speed` to update the speed each time it is called
   
+  ```c++
+// return: linear speed of the boat
+double test_speed(){                 
+    float acceleration = mpu.readNormalizeAccel().XAxis;
+    delay(250);
+    acceleration += mpu.readNormalizeAccel().XAxis;
+    delay(250);
+    acceleration += mpu.readNormalizeAccel().XAxis;
+    acceleration = (acceleration / 3.0) - acc_drift;
+    
+    speed = (double)(acceleration * get_time()  + speed);
+    return speed;
+}
+```
+  
+  <br/>
+  
+  
   ### location_update()
   
+  `location_update` is used to have a real time location of the boat named loc by integrating twice the acceleration according to the X-axis (as the unmodified data in in m/s^2) and integrating the angular speed from the gyroscope (rad/s) once according to the Z-axis. We hence have the radial and angular position of the boat. This data is then stored in a new structure we have named Location which has the radius, angle but also converts the position into cartesian coordinates x,y (with the origin at the initial location of the boat)
+  
+   ```c++
+ typedef struct {   // initialized at 0
+  double r = 0;
+  double angle = 0;
+  double x = 0;
+  double y = 0;
+}Location ;
+  
+Location loc;  
+Location dest;
+Location dests[MAX_STOPS];
+int dest_index = 0; 
+int dest_total; 
+  
+//updates location of boat
+Location location_update() {
+   float acceleration = mpu.readNormalizeAccel().XAxis;
+   float gyroscope = mpu.readNormalizeGyro().ZAxis;
+   delay(250);
+   acceleration += mpu.readNormalizeAccel().XAxis;
+   gyroscope += mpu.readNormalizeGyro().ZAxis;
+   delay(250);
+   acceleration += mpu.readNormalizeAccel().XAxis;
+   gyroscope += mpu.readNormalizeGyro().ZAxis;
+   
+   acceleration = (acceleration / 3.0) - acc_drift;
+   gyroscope = gyroscope / 3.0;
+   
+   double time = get_time();
+   
+   loc.r = (double) (acceleration * time * time  + speed * time + loc.r);
+   loc.angle = (double) (gyroscope * time + loc.angle) ; 
+   loc.x = loc.r * cos(loc.angle * DEG_TO_RAD);
+   loc.y = loc.r * sin(loc.angle * DEG_TO_RAD);
+   speed = (double) (acceleration * time  + speed);
+   
+   return loc;
+}
+```
+  
+  <br/>
+  
   ### update_arrival()
+  The function `update_arrival()` checks whether we have arrived at the next target (stored in dest) and whether it is the final destination. If the boat has arrived at the destination then it will update it to the next one in the array and if the boat has arrived at the final destination, the code exits.
+  
+ ```c++  
+void update_arrival() {
+  if (arrival() && dest_index < (dest_total - 1)) {
+    dest = dests[ ++dest_index ];
+  } else if ( dest_index == (dest_total - 1 )) {
+    exit(0);
+  }
+}
+```
+  
+  <br/>
   
   ### arrival()
   `arrival()` calls `location_update()` and checks whether the boat has arrived to the next destination in the array of targets
+  
+ ```c++
+  boolean arrival(){
+  location_update();
+  if (abs(loc.r - dest.r) <= 5 && abs(loc.angle - dest.angle) <= 5) {
+    return true;
+    }
+  return false;
+}
+```
+  <br/>
   
   ### get_time()
   
   `get_time` works with two global variables previous and present and allows to calculate the time passed (in seconds) since the last time it was called. It uses the `millis()` function of the arduino which returns time in milliseconds. 
   
+ ```c++  
+unsigned long previous;
+unsigned long present;
+  
+//return: time from last mesure
+double get_time() {
+  previous = present;
+  present = millis();
+  return (double) ((present - previous) * pow(10, -3));
+}
+```
+  
+  <br/>
+  
   ### create_target()
   
   `create_target` takes as input two coordinates x and y to translates them to an angle and radius to return a Location target for the boat. This function is useful in the setup to initialise our array of stops for the boat to go to
   
-
+ ```c++
+  Location create_target(double x, double y) {
+  Location l; 
+  l.x = x;
+  l.y = y;
+  l.r = sqrt(x*x + y*y) ;
+  l.angle = atan2(y , x) * RAD_TO_DEG;  
+  return l;
+}
+```
+  
+<br/>
+  
 ## Wind vane
