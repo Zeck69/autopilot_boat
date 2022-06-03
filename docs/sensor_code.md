@@ -160,6 +160,6 @@ double get_time() {
 ```
 <br/>
   
-  TODO: Do I keep all code and issues faced (drift, etc... )
+  TODO: Do I keep all code ? If so comment it and issues faced (drift, etc... )
   
 ## Wind vane
