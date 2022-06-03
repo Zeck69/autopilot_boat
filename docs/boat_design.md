@@ -108,7 +108,7 @@ Printing such a boat took some time. For a single part of the hull, the printing
 
 ### Gluing parts together
 
-To put parts together, we used epoxy glue for all the components.   
+To put parts together, we used epoxy glue for all the components.  
 
 ### The Sail
 
