@@ -65,13 +65,14 @@ Our first design had a more **complicated structure**. We tried to arrange compo
 
 Except floatability and balance of this design, the main issue we tried to address is the **watertightness**. We made different compartment to isolate all the components, in case one is flood. The cover is here to protect the inside of the boat. However, as previously mentionned, the fact that the rudder axle is directly connected to the servo in this design might have caused some troubles. Its complexity might also have been hard to manage and assemble, specially when testing.
 
-## 2)	First design
+## 2)	Second design
 
 After a **total refinement** of the design, we ended up having a laser solo like shape, with a simpler hull and space arrangement.
 
-<br>
-<img src="assets/design.png" alt="floating" style="width: 80%; display: flex; margin:auto"/>
-<br>
+<p style="margin:auto; width: 80%; display: flex; flex-direction: column">
+  <img src="assets/design.png" alt="floating"/>
+  <em>Early render of our design</em>
+</p>
 
 - To solve the issue with the rudder, we made a tank-like turret system wich consists in a curved-shaped bulkhead combined with the tiller. In this manner, the hole at the back of the hull that allows the tiller to pass is always covered and water is stopped. It is nevertheless only resistent to splashes, but should not be put under water.
 
@@ -121,18 +122,18 @@ To construct our sail we needed : the sail, a wooden bar, a sewing machine, eyel
 ## 6)	The keel issue
 In order to have a well balanced boat that does not capsize, we had to make calculations to determine the force moment of the mast and the weight of the keel that could cancel this force moment. We obtained a weight of 750g.
 
-<p>
-    <img src="assets/keel_effect.jpg" alt="floating" style="width:500px; display: flex; margin:auto"/>
-    <em>The keel effect (counterweight)</em>
+<p style="margin:auto; width: 80%; display: flex; flex-direction: column">
+  <img src="assets/keel_effect.jpg" alt="floating"/>
+  <em>The keel effect (counterweight)</em>
 </p>
 
 The keel was hard to make, as we needed it to be dense and heavy. We needed to iterate to find the perfect weight so that it counterbalance our mast. We finally ended up filling it with lead trapped in concrete.
 
 In total, our keel has a weight of 600g, wich is sufficient for our prototype.
 
-<p>
-    <img src="assets/keel_inside.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
-    <em>Sectional view of the keel</em>
+<p style="margin:auto; width: 80%; display: flex; flex-direction: column">
+  <img src="assets/keel_inside.png" alt="floating"/>
+  <em>Sectional view of the keel</em>
 </p>
 
 Our first try was not heavy enough, and its volume too small. The density needed to achieve our goal was tremendous. Therefore, we had to add some extensions to the dagger-board to put the keel further from the mass center and increase its volume.
