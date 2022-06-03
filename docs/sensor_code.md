@@ -38,10 +38,15 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
   ### update_arrival()
   
   ### arrival()
+  `arrival()` calls `location_update()` and checks whether the boat has arrived to the next destination in the array of targets
   
   ### get_time()
   
+  `get_time` works with two global variables previous and present and allows to calculate the time passed (in seconds) since the last time it was called. It uses the `millis()` function of the arduino which returns time in milliseconds. 
+  
   ### create_target()
+  
+  `create_target` takes as input two coordinates x and y to translates them to an angle and radius to return a Location target for the boat. This function is useful in the setup to initialise our array of stops for the boat to go to
   
 
 ## Wind vane
