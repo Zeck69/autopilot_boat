@@ -79,7 +79,10 @@ In order to make this methods work together we should use another clock or updat
 
  ### Turning on the same of the wind
  * if we don't want to change from side of the wind but get closer or further from the wind
-  <br/>
+
+ <figure class="video_container">
+  <iframe src=assets/BasicMovecopia.MOV allowfullscreen="false"> </iframe>
+</figure>
  #### Basic description:
  ### Jibing
  * if we want to change from side of the wind with the wind in our backs
