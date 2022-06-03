@@ -56,6 +56,12 @@ Another approach could be to have some waterproof components, like the servos, w
 
 ### Naive design Based on these guidelines (or almost...)
 
+Our first design had a more complicated structure. We tried to arrange components on top of each other, wich made the boat less long. But at the same time, it was increasing the difficulty to manipulate the components. The boat was however thicker and not very hydrodynamic. Here is the result :
+
+<img src="assets/first_design.png" alt="floating" style="width: 80%; display: flex; margin:auto"/>
+
+![](assets/first_boat_front.png)  |  ![](assets/first_boat_top.png)
+
 
 ## 2)	First design
 ## 3)	Design improvements
