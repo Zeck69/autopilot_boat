@@ -100,6 +100,77 @@ In order to make this methods work together we should use another clock or updat
  #### Basic description:
  <br/><br/>
 
+(here I show the decision function for turning, go inside each method of the code for more detail)
+
+```c++
+/*
+starting_angle: current direction of boat with respect to wind direction
+desired_position: degree of the final position with respect to the wind
+return: makes the boat turn to the given direction with a correct change for the sail and rudder, if possible (not in the wind cone)
+*/
+void turning(int starting_angle, int desired_position){
+    if(degrees_limit(starting_angle) >= 0 && degrees_limit(desired_position) >= 180 - MAX_VAL_DEG_BOAT){
+        //turning in the right side of the wind, without changing sides
+        if(degrees_limit(desired_position)- degrees_limit(starting_angle) > 0){
+            // we have to go further appart from the wind
+            while(degree_boat() < degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
+            }
+            Serial.println("end turning while");
+            //turn finished at this point
+           end_turn();
+
+        }else if(degrees_limit(desired_position)- degrees_limit(starting_angle) < 0){
+            //we have to get closer to the wind
+            while(degree_boat() > degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
+            }
+            //turn finished at this point
+            Serial.println("end turning while");
+            end_turn();
+        }
+    }else if(degrees_limit(starting_angle) <= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+        //turning in the left side of the wind
+        if(degrees_limit(desired_position)- degrees_limit(starting_angle) > 0){
+            // we have to get closer to the wind
+            while(degree_boat() < degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
+            }
+            //turn finished at this point
+            Serial.println("end turning while");
+            end_turn();
+
+        }else if(degrees_limit(desired_position)- degrees_limit(starting_angle) < 0){
+            //we have to get further appart from the wind
+            while(degree_boat() > degrees_limit(desired_position)){
+                turning_settings(degrees_limit(desired_position)-degrees_limit(starting_angle),15);
+            }
+            //turn finished at this point
+            Serial.println("end turning while");
+            end_turn();
+        }
+        
+    }else{
+        if(degrees_limit(starting_angle) <= 0 && degrees_limit(desired_position) >= (180 - MAX_VAL_DEG_BOAT)){
+            if(degrees_limit(desired_position)<= 180+degrees_limit(starting_angle)){
+                tacking(starting_angle,desired_position);
+            }else{
+                jibing(starting_angle,desired_position);
+            }
+
+        }else if(degrees_limit(starting_angle) >= 0 && degrees_limit(desired_position) <= -(180 - MAX_VAL_DEG_BOAT)){
+            if(degrees_limit(desired_position) >= -(180-degrees_limit(starting_angle))){
+                tacking(starting_angle,desired_position);
+            }else{
+                jibing(starting_angle,desired_position);
+            }
+        }else{
+            beating(starting_angle,desired_position);
+        }
+    }
+}
+```
+
  # Auxiliary useful methods
 
  ## Smooth sail and tiller calibration

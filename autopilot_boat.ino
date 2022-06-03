@@ -207,7 +207,6 @@ void turning(int starting_angle, int desired_position){
 }
 
 //more compact way of handle turning since alwayss the same computation
-//TODO add transition 
 //handle when diff is more than 20° => if(diff>20){diff = 20}
 void turning_settings(int diff,int time){
     if(diff > 20){
