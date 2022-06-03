@@ -175,3 +175,5 @@ One of the principal components of our boat is the wind vane. We will use it to 
 
 Finally, after a lot of tests we choose to make our potentiometer using a 3D printed piece, a bearing, a bristol paper, a pencil, a needle, 3 cables and a 3D printed wind vane. The idea was to construct a cylinder support where we put the paper colored with the pencil. Then we associate our 3D wind vane in the bottom with the bearing and the needle perpendicular to it. After we connect a cable to the needle and to the ends of the paper so we can use the resistance when the metal rod moves around.\
 However, when the wind vane moved, the cables made it moves back so it was not really efficient. So, we choose to assume a constant wind and use the IMU to see the displacement and find the optimal position of the sail by optimization. 
+
+<img src="assets/windvane.jpg" alt="floating" style="width:500px; display: flex; margin:auto"/>
