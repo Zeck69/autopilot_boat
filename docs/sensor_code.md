@@ -21,7 +21,7 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
  <div style="text-align: justify"> First of all, what is an IMU and why do we need it ? An IMU is a module composed of an accelerometer and a gyroscope. Ours, also houses a temperature sensor but it can also have a magnetometer in some cases. To connect it to our Arduino, we can just use the analog pins A4, A5 for the SDA and SCL pins, the 5V pin for the VCC input and the ground pin as showed in the figure below. 
  </div>
   
-   ![](assets/IMU.png)
+<img src="assets/IMU.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
   
 <br>
  <div style="text-align: justify"> Be careful, not all IMUs can be directly powered from a 5V source, some need an additional level shifter from 5V to 3.3V. If you have an IMU 6050 GY-521 like us for example, you should be just fine with a 5V output. </div>
