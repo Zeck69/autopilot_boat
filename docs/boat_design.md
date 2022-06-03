@@ -92,10 +92,23 @@ After a **total refinement** of the design, we ended up having a laser solo like
 <img src="assets/design_draw.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
 
 ## 3)	Design improvements
+
+- We tried to improve the rudder by reducing the friction and improving the strength. But our attempts failed as the holes for it were really tight. Yet, we reprinted it with a greater infill value (% of plastic inside) to make it more robust.
+
+- We had to make the cover thicker because of the *puck* we use for the mast. Indeed, the puck is too high to fit in a plate cover. It also enables us to better hold the mast.
+
+
 ## 4)	Printing the boat
+
+We desided for convenience to entirely print our parts in PET-G with Prusa printers. To fit in the printer, we had to cut the hull in 4 parts and the mast in 8 parts wich are all available in the GitHub repository. 
+
+Printing such a boat took some time. For a single part of the hull, the printing time is about 15 hours. We also had some problem with parts that were bent because of the heat of the bed of the printer.
+
 ## 5)	Assembling the boat
 
-#### The Sail
+### Gluing parts together
+
+### The Sail
 
 For the sail, we contact the SP 80 team to ask them if they can give us a piece of a sail. They redirect us to the SKIL. We get 3 different types of sails and we choose the lightest one because our objectif wasn’t the performance but just to make our boat move.
 <br>
