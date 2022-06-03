@@ -136,7 +136,7 @@ In total, our keel has a weight of 600g, wich is sufficient for our prototype.
   <em>Sectional view of the keel</em>
 </p>
 
-Our first try was not heavy enough, and its volume too small. The density needed to achieve our goal was tremendous. Therefore, we had to add some extensions to the dagger-board to put the keel further from the mass center and increase its volume.
+Our first try was not heavy enough, and its volume too small. The density needed to achieve our goal was then tremendous. Therefore, we had to add some extensions to the dagger-board to put the keel further from the mass center and increase its volume.
 
 ## 7)	Finalizing the boat
 
