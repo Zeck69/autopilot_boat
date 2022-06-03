@@ -10,7 +10,7 @@ nav_order: 5
 
 ## Movement of the sail
 
-<br/>
+<br>
 
 Degree of freedom for boat witha given wind             |  Degree of freedom of the sail
 :-------------------------:|:-------------------------:
@@ -19,8 +19,8 @@ Degree of freedom for boat witha given wind             |  Degree of freedom of 
 
 
 <div style="text-align: justify"> Before diving in the code, we have to understand how to move the boat with a given wind. First, the boat can only be directed in a direction at least 45° appart from the wind. The closest the boat gets to the wind cone (in red in the first) the closest our sail must be of the opposite diagonal (the red diagonal in the second image if the boat is at 45° to the right to the wind). </div>
-<br/>
-<em>For the following code we will talk about degrees between -179 (to the left) and 180 (to the right) for the position of the boat with respect to the wind that is our reference at 0 (cf. <b> method degrees_limit(int value) </b>)</em>. <br/><br/>
+<br>
+<em>For the following code we will talk about degrees between -179 (to the left) and 180 (to the right) for the position of the boat with respect to the wind that is our reference at 0 (cf. <b> method degrees_limit(int value) </b>)</em>. <br><br>
 
 ## Basic movement
 
@@ -29,7 +29,7 @@ Degree of freedom for boat witha given wind             |  Degree of freedom of 
 * Predict an initial sail poition (cf. `degree_pred...(int boat_degree)`)
     * We first try to obtain geometrically the optimal position of the sail, computing the impact of the wind in the sail. This method was no where close to the desired objective and was very imprecise with the most extreme values (such as 0° or 180°).
     * Our second approach was to use pennants to experimentally see the impact of the wind in the sail and do a regression with the data to obtain a precise function. (%4.3 standard deviation)
-    <br/>
+    <br>
 
     ![](assets/test.png)  |  ![](assets/test3.png)
 
@@ -83,31 +83,31 @@ In order to make this methods work together we should use another clock or updat
 
 <div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if a human was leaving the sail free to adapt to the turn. (cf <em>turning_settings</em>)</div> <br>
 
- ### Jibing
+### Jibing
  * if we want to change from side of the wind with the wind in our backs
 
   <figure class="video_container">
-  <iframe src="https://www.youtube.com/watch?v=JSpIAscG5cY" frameborder="0" allowfullscreen="false"> </iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/gMEOex9GQWU?start=55" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </figure>
 
- #### Basic description:
+#### Basic description:
 
  <div style="text-align: justify"> We do a usual turn until a safe degree (around 150°) and then force a fast transition through the change of side of the wind by complete change of position of the sail (from one horizon to the other). During this transition we smoothly change the position of the sail via our prediction model.</div> <br>
 
- ### Tacking
+### Tacking
  * if we want to cross the wind cone during a maneuver
 
  <figure class="video_container">
   <iframe src="https://www.youtube.com/watch?v=gMEOex9GQWU&t=55s" frameborder="0" allowfullscreen="false"> </iframe>
 </figure>
 
- #### Basic description:
+#### Basic description:
  <div style="text-align: justify"> Similar as what we do for jibing, we do a usual turn until a the edge of the windcone, stabilize there and after do a fast transition of the sail and the tiller to get through the windcone as fast as possible. We end by optimizing the position of the sail once the desired degree reached. </div> <br>
 
 ### Beating
  * if we want to go towards somewhere within the wind cone we will need to zigzag our way upwards the wind with mutiple tacks
 
- #### Basic description:
+#### Basic description:
  <div style="text-align: justify"> Theory says that we should stay at the closest 45° of the wind until our destination is perpendicular to the end of the boat and tack to the otherside. We should zigzag our way up. This theory is not trivial with our components so we decidede to implement a simpler method. In function of which position inside the windcone we desire to get, we spend more or less time in one side of the windcone or the other(cf <em>fct_time</em>). After this we only reuse our tacking method for 5 times and consider it is sufficient(cf <em>beating()</em>). Using this method we should call it inside a loop until a certain position is attained.</div> <br>
  <br/><br/>
 
