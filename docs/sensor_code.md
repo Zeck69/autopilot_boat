@@ -32,7 +32,7 @@ As an alternative solution, we have decided to use the IMU’s accelerometer and
     
   <br>
   
-  ### test_speed() 
+### test_speed() 
   
   This method integrates the data of the accelerometer along the X-axis to find the linear speed of our boat uses the formula : `speed = acceleration * time + speed` to update the speed each time it is called
   
@@ -54,7 +54,7 @@ double test_speed(){
   <br>
   
   
-  ### location_update()
+### location_update()
   
   `location_update` is used to have a real time location of the boat named loc by integrating twice the acceleration according to the X-axis (as the unmodified data in in m/s^2) and integrating the angular speed from the gyroscope (rad/s) once according to the Z-axis. We hence have the radial and angular position of the boat. This data is then stored in a new structure we have named Location which has the radius, angle but also converts the position into cartesian coordinates x,y (with the origin at the initial location of the boat)
   
@@ -100,36 +100,36 @@ Location location_update() {
   
   <br>
   
-  ### update_arrival()
+### update_arrival()
   The function `update_arrival()` checks whether we have arrived at the next target (stored in dest) and whether it is the final destination. If the boat has arrived at the destination then it will update it to the next one in the array and if the boat has arrived at the final destination, the code exits.
   
  ```c++  
 void update_arrival() {
   if (arrival() && dest_index < (dest_total - 1)) {
-    dest = dests[ ++dest_index ];
+    dest = dests[ ++dest_index ]; // if we have arrived to the current destination then the destination is updated to the next location in the array
   } else if ( dest_index == (dest_total - 1 )) {
-    exit(0);
+    exit(0); // if we have arrived to our final stop then the code extis
   }
 }
 ```
   
   <br>
   
-  ### arrival()
+### arrival()
   `arrival()` calls `location_update()` and checks whether the boat has arrived to the next destination in the array of targets
   
  ```c++
   boolean arrival(){
-  location_update();
+  location_update();  
   if (abs(loc.r - dest.r) <= 5 && abs(loc.angle - dest.angle) <= 5) {
-    return true;
+    return true; // if we are close enough to the target we return true
     }
   return false;
 }
 ```
   <br>
   
-  ### get_time()
+### get_time()
   
   `get_time` works with two global variables previous and present and allows to calculate the time passed (in seconds) since the last time it was called. It uses the `millis()` function of the arduino which returns time in milliseconds. 
   
@@ -139,30 +139,30 @@ unsigned long present;
   
 //return: time from last mesure
 double get_time() {
-  previous = present;
+  previous = present; // updates time stamps
   present = millis();
-  return (double) ((present - previous) * pow(10, -3));
+  return (double) ((present - previous) * pow(10, -3));  // converts milliseconds to seconds
 }
 ```
   
   <br>
   
-  ### create_target()
+### create_target()
   
   `create_target` takes as input two coordinates x and y to translates them to an angle and radius to return a Location target for the boat. This function is useful in the setup to initialise our array of stops for the boat to go to
   
  ```c++
   Location create_target(double x, double y) {
-  Location l; 
+  Location l;  // creates target
   l.x = x;
   l.y = y;
-  l.r = sqrt(x*x + y*y) ;
+  l.r = sqrt(x*x + y*y) ;  // converts to polar coordinates
   l.angle = atan2(y , x) * RAD_TO_DEG;  
   return l;
 }
 ```
 <br/>
   
-  TODO: Do I keep all code ? If so comment it and issues faced (drift, etc... )
+  TODO: issues faced (drift, etc... )
   
 ## Wind vane
