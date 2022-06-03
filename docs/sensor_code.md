@@ -158,7 +158,8 @@ double get_time() {
   return l;
 }
 ```
-  
 <br/>
+  
+  TODO: Do I keep all code and issues faced (drift, etc... )
   
 ## Wind vane
