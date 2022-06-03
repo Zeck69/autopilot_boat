@@ -6,8 +6,6 @@ nav_order: 5
 
 # Sailing principles
 
-
-
 ## Movement of the sail
 
 <br>
@@ -81,7 +79,7 @@ In order to make this methods work together we should use another clock or updat
 
 #### Basic description:
 
-<div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if a human was leaving the sail free to adapt to the turn. (cf <em>turning_settings</em>)</div> <br>
+<div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if a human was leaving the sail free to adapt to the turn. (cf <em>turning_settings</em>)</div>
 
 ### Jibing
  * if we want to change from side of the wind with the wind in our backs
@@ -92,7 +90,7 @@ In order to make this methods work together we should use another clock or updat
 
 #### Basic description:
 
- <div style="text-align: justify"> We do a usual turn until a safe degree (around 150°) and then force a fast transition through the change of side of the wind by complete change of position of the sail (from one horizon to the other). During this transition we smoothly change the position of the sail via our prediction model.</div> <br>
+ <div style="text-align: justify"> We do a usual turn until a safe degree (around 150°) and then force a fast transition through the change of side of the wind by complete change of position of the sail (from one horizon to the other). During this transition we smoothly change the position of the sail via our prediction model.</div>
 
 ### Tacking
  * if we want to cross the wind cone during a maneuver
@@ -102,14 +100,13 @@ In order to make this methods work together we should use another clock or updat
 </figure>
 
 #### Basic description:
- <div style="text-align: justify"> Similar as what we do for jibing, we do a usual turn until a the edge of the windcone, stabilize there and after do a fast transition of the sail and the tiller to get through the windcone as fast as possible. We end by optimizing the position of the sail once the desired degree reached. </div> <br>
+ <div style="text-align: justify"> Similar as what we do for jibing, we do a usual turn until a the edge of the windcone, stabilize there and after do a fast transition of the sail and the tiller to get through the windcone as fast as possible. We end by optimizing the position of the sail once the desired degree reached. </div>
 
 ### Beating
  * if we want to go towards somewhere within the wind cone we will need to zigzag our way upwards the wind with mutiple tacks
 
 #### Basic description:
- <div style="text-align: justify"> Theory says that we should stay at the closest 45° of the wind until our destination is perpendicular to the end of the boat and tack to the otherside. We should zigzag our way up. This theory is not trivial with our components so we decidede to implement a simpler method. In function of which position inside the windcone we desire to get, we spend more or less time in one side of the windcone or the other(cf <em>fct_time</em>). After this we only reuse our tacking method for 5 times and consider it is sufficient(cf <em>beating()</em>). Using this method we should call it inside a loop until a certain position is attained.</div> <br>
- <br/><br/>
+ <div style="text-align: justify"> Theory says that we should stay at the closest 45° of the wind until our destination is perpendicular to the end of the boat and tack to the otherside. We should zigzag our way up. This theory is not trivial with our components so we decidede to implement a simpler method. In function of which position inside the windcone we desire to get, we spend more or less time in one side of the windcone or the other(cf <em>fct_time</em>). After this we only reuse our tacking method for 5 times and consider it is sufficient(cf <em>beating()</em>). Using this method we should call it inside a loop until a certain position is attained.</div>
 
 (here I show the decision function for turning, go inside each method of the code for more detail, if there is a similar function `show_IMU` it has more updated conditions and optimal functions but will be less modular)
 
