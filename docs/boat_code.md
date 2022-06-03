@@ -68,17 +68,18 @@ void degree_sampling(int start_degree){
 }
 ```
 ## Turning methods
-<mark> Inside the code there is multiple methods with the same functionnality, some are named `show_IMU` because they were used to showcase the function without using a windvane and measuring turning with the gyroscope of the IMU. In these methods we rely on a variable `angle_boat` that is modified through the turnings to keep track of the position of the boat with respect to the wind.<br> Add to this, the implementation of these methods force to change the use of the clock of the arduino. Therefore our methods of `localisation` and `show_IMU` are not compatible at the moment.</br>
+<mark> Inside the code there is multiple methods with the same functionnality, some are named `show_IMU` because they were used to showcase the function without using a windvane and measuring turning with the gyroscope of the IMU. In these methods we rely on a variable `angle_boat` that is modified through the turnings to keep track of the position of the boat with respect to the wind.\
+ Add to this, the implementation of these methods force to change the use of the clock of the arduino. Therefore our methods of `localisation` and `show_IMU` are not compatible at the moment.\
 In order to make this methods work together we should use another clock or update both whenever any of them are called.
  </mark>
 
  * The general method (cf `turning`) manages all maneuvers possibles, selecting the best fitting option for a given angle destination.
  * Input the final angle of the boat with respect to the wind and the program will chose which of the following methods to call.
 
-  ### Turning on the same of the wind
+### Turning on the same of the wind
  * if we don't want to change from side of the wind but get closer or further from the wind
 
- #### Basic description:
+#### Basic description:
 
 <div style="text-align: justify"> We compute the angle difference between our destination and our current position to decide the direction for the tiller. After this, we force the configuration to turn in the given direction and predict the position of the sail as smoothly as possible, as if a human was leaving the sail free to adapt to the turn. (cf <em>turning_settings</em>)</div> <br>
 
