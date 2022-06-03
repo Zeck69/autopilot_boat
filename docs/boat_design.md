@@ -73,21 +73,21 @@ After a **total refinement** of the design, we ended up having a laser solo like
 <img src="assets/design.png" alt="floating" style="width: 80%; display: flex; margin:auto"/>
 <br>
 
-1. To solve the issue with the rudder, we made a tank-like turret system wich consists in a curved-shaped bulkhead combined with the tiller. In this manner, the hole at the back of the hull that allows the tiller to pass is always covered and water is stopped.
+- To solve the issue with the rudder, we made a tank-like turret system wich consists in a curved-shaped bulkhead combined with the tiller. In this manner, the hole at the back of the hull that allows the tiller to pass is always covered and water is stopped.
 
 ![](assets/rudder.png)  |  ![](assets/boat_rudder.png)
 
-2. The shape of the hull, as well as the mast and the dagger-board are drop-shaped to be more hydrodynamic.
+- The shape of the hull, as well as the mast and the dagger-board are drop-shaped to be more hydrodynamic.
 
-3. The keel in this design is clipped to the dagger-board thanks to a notch.
+- The keel in this design is clipped to the dagger-board thanks to a notch.
 
 <img src="assets/keel.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
 
-4. The mast is attached to the servo through a cross-shaped piece given with the servo, wich fits in a *puck* that is glued to the metallic bar inside the mast. We indeed added this safety precaution to prevent the mast from breaking if it was facing harsh weather conditions and high torque.
+- The mast is attached to the servo through a cross-shaped piece given with the servo, wich fits in a *puck* that is glued to the metallic bar inside the mast. We indeed added this safety precaution to prevent the mast from breaking if it was facing harsh weather conditions and high torque.
 
 ![](assets/sail_servo.png)  |  ![](assets/puck.png)
 
-5. We have made a compartment for each component to separate them clearly.
+- We have made a compartment for each component to separate them clearly.
 
 <img src="assets/design_draw.png" alt="floating" style="width:500px; display: flex; margin:auto"/>
 
