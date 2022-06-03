@@ -211,28 +211,28 @@ void turning(int starting_angle, int desired_position){
 //handle when diff is more than 20° => if(diff>20){diff = 20}
 void turning_settings(int diff,int time){
     if(diff > 20){
-        tiller.write(90-(19));
+        smoother_angle_write_tiller(90-(19));
         delay(time);
         Serial.println(degree_boat());
-        sail.write(degree_prediction_before_horizon(degree_boat())); 
+        smoother_angle_write_sail(degree_prediction_before_horizon(degree_boat())); 
         delay(time);
     }else if(diff<-20){
-        tiller.write(90-(-19));
+        smoother_angle_write_tiller(90-(-19));
         delay(time);
         Serial.println(degree_boat());
-        sail.write(degree_prediction_before_horizon(degree_boat())); 
+        smoother_angle_write_sail(degree_prediction_before_horizon(degree_boat())); 
         delay(time);
     }else{
-        tiller.write(90-(diff));
+        smoother_angle_write_tiller(90-(diff));
         delay(time);
         Serial.println(degree_boat());
-        sail.write(degree_prediction_before_horizon(degree_boat())); 
+        smoother_angle_write_sail(degree_prediction_before_horizon(degree_boat())); 
         delay(time);
     }
 }
 
 void end_turn(){
-    tiller.write(90);
+    smoother_angle_write_tiller(90);
     degree_sampling(degree_prediction_before_horizon(degree_boat()));
 }
 
