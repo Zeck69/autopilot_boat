@@ -86,8 +86,8 @@ In order to make this methods work together we should use another clock or updat
 ### Jibing
  * if we want to change from side of the wind with the wind in our backs
 
-  <figure class="video_container">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/gMEOex9GQWU?start=55" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<figure class="video_container">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/JSpIAscG5cY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </figure>
 
 #### Basic description:
@@ -98,7 +98,7 @@ In order to make this methods work together we should use another clock or updat
  * if we want to cross the wind cone during a maneuver
 
  <figure class="video_container">
-  <iframe src="https://www.youtube.com/watch?v=gMEOex9GQWU&t=55s" frameborder="0" allowfullscreen="false"> </iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/gMEOex9GQWU?start=55" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </figure>
 
 #### Basic description:
