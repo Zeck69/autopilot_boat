@@ -29,7 +29,7 @@ The **balance** of the boat is as much important as the previous consideration. 
   - However, the biggest components - the battery - was placed as close as possible to the center of the boat.
   - &rArr; It does not cause much problem to have a boat leaning on its rear, as long as it is not close to sink. What should be seek is a lateral balance and avoiding to lean on the front.
 - The ***dagger-board*** wich is mandatory, otherwise the boat would drift in the same direction as the wind instead of moving forward. It also helps stabilize the boat as its bearing capacity when moving creates a moment that keeps the boat upright.
-- The ***keel*** might be the most precious ally for balance. Epecially when the mast is high and heavy, the keel plays the role of a counterweight creating a moment that prevent the boat from tilting on the side.
+- The ***keel*** might be the most precious ally for balance. Especially when the mast is high and heavy, the keel plays the role of a counterweight creating a moment that prevent the boat from tilting on the side.
 
 <img src="assets/zero-keel-2-scaled.jpg" alt="floating" style="width:300px; display: flex; margin:auto"/>
 
