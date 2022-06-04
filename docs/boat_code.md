@@ -179,6 +179,14 @@ void turning(int starting_angle, int desired_position){
 }
 ```
 
+# IMU vs Windvane implementation
+
+If the project is used with a windvane the position of the wind would not be hard coded but used with alongside with the IMU input.
+
+* We currently fix a wind position at the set up, and compute the new position with respect to the angle movement detected by the IMU.
+
+The idea would be to detect the wind position via outside information (weather information or a fixed wind vane outside) and compare to the angle measured via the boat wind vane to have an exact position with respect to the wind and adapt to any change of wind. IMU will be used only for speed testing and maybe could be used to manage and/or control boat inclination.
+
 # Auxiliary useful methods
 
 ## Smooth sail and tiller calibration
