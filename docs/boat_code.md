@@ -187,6 +187,10 @@ If the project is used with a windvane the position of the wind would not be har
 
 The idea would be to detect the wind position via outside information (weather information or a fixed wind vane outside) and compare to the angle measured via the boat wind vane to have an exact position with respect to the wind and adapt to any change of wind. IMU will be used only for speed testing and maybe could be used to manage and/or control boat inclination.
 
+# Debug Arduino code
+
+ <mark>There is no proper way of debuging arduino code from the arduino IDE, and if the code is run without the IMU the code will be block at the set up. I would encourage to use any other IDE that enables debuging or simply using a Rasberry Pi a for better debuging and code testing. If you still decide to use arduino for your project, check the differences with C (headers or any other) and make sure to flush after every print in order to obtain information when debugging.</mark>
+
 # Auxiliary useful methods
 
 ## Smooth sail and tiller calibration

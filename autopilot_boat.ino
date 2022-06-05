@@ -104,9 +104,9 @@ int degrees_limit(int value){
 //new prediction model (-0,496*boat_degree+90) => loss reduced from 4,312%
 int degree_prediction_before_horizon(int boat_degree){ 
     if(boat_degree < 0){
-        return 180-(int)(-0.5162*(-(double)(boat_degree))+94.3846);
+        return 180-(int)(-0.496*(-(double)(boat_degree))+90);
     }else{
-        return (int)((-0.5162*(double)(boat_degree)+94.3846));
+        return (int)((-0.496*(double)(boat_degree)+90));
     }
     
 }
@@ -243,13 +243,17 @@ void end_turn(){
 //usual turn until wind cone then force turning until outside the cone via simulating the movement of the sail and usual turning until end
 void tacking(int starting_angle, int desired_position){
     if(desired_position > 0){
+        //find a stable position at -45° to cross the wind after
         turning(starting_angle,-(180-MAX_VAL_DEG_BOAT));
+
         while(degree_boat() < 180-MAX_VAL_DEG_BOAT){
             turning_settings(20,10);
         }
         turning(degree_boat(),desired_position);
     }else{
+       //find a stable position at 45° to cross the wind after
         turning(starting_angle,180-MAX_VAL_DEG_BOAT);
+
         while(degree_boat() > -(180-MAX_VAL_DEG_BOAT)){
             turning_settings(-20,10);
         }
@@ -278,6 +282,7 @@ void jibing(int starting_angle, int desired_position){
 }
 
 void beating(int starting_angle, int desired_position){
+    //boolean to know from which side we start, if left or right (true or false respectively)
     bool neg = false;
     if(starting_angle >= 180-MAX_VAL_DEG_BOAT){
         turning(starting_angle,180-MAX_VAL_DEG_BOAT);
@@ -393,7 +398,7 @@ Location create_target(double x, double y) {
 }
 
 
-//return: degree of the boat with respect to the wind in real time thanks to the windvane
+//return: degree of the boat with respect to the wind in real time thanks to the windvane (only a 180 degrees)
 int degree_boat(){
     return (int) ((double)analogRead(A0)/1023*180);
 }
